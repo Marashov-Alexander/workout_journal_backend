@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  workout-journal-mysql-db:
+    image: workout-journal-db-docker-image
+    build:
+      context: ./
+      dockerfile: ./db/Dockerfile
+    ports:
+      - 3306:3306
+    volumes:
+      - /data/workout-journal-db
+  workout-journal-rest-api-app:
+    image: workout-journal-rest-docker-image
+    depends_on:
+      - workout-journal-mysql-db
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - /data/workout-journal-app
