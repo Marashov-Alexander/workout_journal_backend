@@ -3,7 +3,7 @@ package journal.workout.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ParameterTypes", schema = "WJDB")
+@Table(name = "parametertypes", schema = "WJDB")
 public class ParameterType {
 
     @Id
@@ -14,7 +14,7 @@ public class ParameterType {
     @Column(name = "name")
     private String name;
 
-    public Long getId() {
+    public Long findId() {
         return id;
     }
 
@@ -22,7 +22,7 @@ public class ParameterType {
         this.id = id;
     }
 
-    public String getName() {
+    public String findName() {
         return name;
     }
 

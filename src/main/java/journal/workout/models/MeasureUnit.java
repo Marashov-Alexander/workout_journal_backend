@@ -3,7 +3,7 @@ package journal.workout.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "MeasureUnits", schema = "WJDB")
+@Table(name = "measureunits", schema = "WJDB")
 public class MeasureUnit {
 
     @Id
@@ -17,7 +17,7 @@ public class MeasureUnit {
     @Column(name = "acronym")
     private String acronym;
 
-    public Long getId() {
+    public Long findId() {
         return id;
     }
 
@@ -25,7 +25,7 @@ public class MeasureUnit {
         this.id = id;
     }
 
-    public String getName() {
+    public String findName() {
         return name;
     }
 
@@ -33,7 +33,7 @@ public class MeasureUnit {
         this.name = name;
     }
 
-    public String getAcronym() {
+    public String findAcronym() {
         return acronym;
     }
 

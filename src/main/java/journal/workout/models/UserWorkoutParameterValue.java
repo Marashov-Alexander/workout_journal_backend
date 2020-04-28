@@ -3,7 +3,7 @@ package journal.workout.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "UserWorkouts_ParameterValues", schema = "WJDB")
+@Table(name = "userworkouts_parametervalues", schema = "WJDB")
 public class UserWorkoutParameterValue {
     @Id
     @Column(name = "id")
@@ -21,7 +21,7 @@ public class UserWorkoutParameterValue {
     @Column(name = "value")
     private Integer value;
 
-    public Long getId() {
+    public Long findId() {
         return id;
     }
 
@@ -29,7 +29,7 @@ public class UserWorkoutParameterValue {
         this.id = id;
     }
 
-    public UserWorkout getUserWorkout() {
+    public UserWorkout findUserWorkout() {
         return userWorkout;
     }
 
@@ -37,7 +37,7 @@ public class UserWorkoutParameterValue {
         this.userWorkout = userWorkout;
     }
 
-    public Parameter getParameter() {
+    public Parameter findParameter() {
         return parameter;
     }
 
@@ -45,7 +45,7 @@ public class UserWorkoutParameterValue {
         this.parameter = parameter;
     }
 
-    public Integer getValue() {
+    public Integer findValue() {
         return value;
     }
 

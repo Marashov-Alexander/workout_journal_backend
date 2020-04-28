@@ -3,7 +3,7 @@ package journal.workout.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Workouts", schema = "WJDB")
+@Table(name = "workouts", schema = "WJDB")
 public class Workout {
     @Id
     @Column(name = "id")
@@ -16,7 +16,7 @@ public class Workout {
     @Column(name = "description")
     private String description;
 
-    public Long getId() {
+    public Long findId() {
         return id;
     }
 
@@ -24,7 +24,7 @@ public class Workout {
         this.id = id;
     }
 
-    public String getName() {
+    public String findName() {
         return name;
     }
 
@@ -32,7 +32,7 @@ public class Workout {
         this.name = name;
     }
 
-    public String getDescription() {
+    public String findDescription() {
         return description;
     }
 

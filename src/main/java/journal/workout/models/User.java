@@ -3,7 +3,7 @@ package journal.workout.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Users", schema = "WJDB")
+@Table(name = "users", schema = "WJDB")
 public class User {
 
     @Id
@@ -29,7 +29,7 @@ public class User {
     @Column(name = "age")
     private Integer age;
 
-    public Long getId() {
+    public Long findId() {
         return id;
     }
 
@@ -37,7 +37,7 @@ public class User {
         this.id = id;
     }
 
-    public String getFirst_name() {
+    public String findFirst_name() {
         return first_name;
     }
 
@@ -45,7 +45,7 @@ public class User {
         this.first_name = first_name;
     }
 
-    public String getLast_name() {
+    public String findLast_name() {
         return last_name;
     }
 
@@ -53,7 +53,7 @@ public class User {
         this.last_name = last_name;
     }
 
-    public String getEmail() {
+    public String findEmail() {
         return email;
     }
 
@@ -61,7 +61,7 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
+    public String findPassword() {
         return password;
     }
 
@@ -69,7 +69,7 @@ public class User {
         this.password = password;
     }
 
-    public Character getIsMale() {
+    public Character findIsMale() {
         return isMale;
     }
 
@@ -77,7 +77,7 @@ public class User {
         this.isMale = isMale;
     }
 
-    public Integer getAge() {
+    public Integer findAge() {
         return age;
     }
 
