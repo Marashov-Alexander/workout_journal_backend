@@ -11,6 +11,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "uid")
+    private String uid;
+
     @Column(name = "first_name")
     private String first_name;
 
@@ -23,11 +26,38 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "is_male")
-    private Character isMale;
+    @Column(name = "gender")
+    private String gender;
 
-    @Column(name = "age")
-    private Integer age;
+    @Column(name = "birthday")
+    private String birthday;
+
+    @Column(name = "avatarurl")
+    private String avatarUrl;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
 
     public Long getId() {
         return id;
@@ -69,19 +99,11 @@ public class User {
         this.password = password;
     }
 
-    public Character getIsMale() {
-        return isMale;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setIsMale(Character isMale) {
-        this.isMale = isMale;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }

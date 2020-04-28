@@ -312,9 +312,18 @@ public class WJServiceImpl implements WJService {
     @Override
     public User updateUser(UserBody userBody, long id) {
         User user = usersRepository.findById(id).orElseThrow(NoSuchElementException::new);
-        if (userBody.getAge() != null) {
-            user.setAge(userBody.getAge());
+        if (userBody.getBirthday() != null) {
+            user.setBirthday(userBody.getBirthday());
         }
+
+        if (userBody.getAvatarUrl() != null) {
+            user.setAvatarUrl(userBody.getAvatarUrl());
+        }
+
+        if (userBody.getUid() != null) {
+            user.setUid(userBody.getUid());
+        }
+
         if (userBody.getEmail() != null) {
             user.setEmail(userBody.getEmail());
         }
@@ -327,8 +336,8 @@ public class WJServiceImpl implements WJService {
             user.setLast_name(userBody.getLast_name());
         }
 
-        if (userBody.getIsMale() != null) {
-            user.setIsMale(userBody.getIsMale());
+        if (userBody.getGender() != null) {
+            user.setGender(userBody.getGender());
         }
 
         if (userBody.getPassword() != null) {

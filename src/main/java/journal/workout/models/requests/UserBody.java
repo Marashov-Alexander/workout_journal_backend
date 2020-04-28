@@ -1,23 +1,46 @@
 package journal.workout.models.requests;
 
-import javax.validation.constraints.NotNull;
-
 public class UserBody {
 
-    @NotNull
+    private String uid;
+
     private String first_name;
 
     private String last_name;
 
-    @NotNull
     private String email;
 
     private String password;
 
-    private Character isMale;
+    private String birthday;
 
-    @NotNull
-    private Integer age;
+    private String gender;
+
+    private String avatarUrl;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
     public String getFirst_name() {
         return first_name;
@@ -51,19 +74,11 @@ public class UserBody {
         this.password = password;
     }
 
-    public Character getIsMale() {
-        return isMale;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setIsMale(Character isMale) {
-        this.isMale = isMale;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }
