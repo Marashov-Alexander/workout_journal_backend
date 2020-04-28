@@ -18,7 +18,7 @@ public class WorkoutExercise {
     @JoinColumn(name = "exercise_id")
     private Exercise exercise;
 
-    public Long findId() {
+    public Long getId() {
         return id;
     }
 
@@ -26,7 +26,7 @@ public class WorkoutExercise {
         this.id = id;
     }
 
-    public Workout findWorkout() {
+    public Workout getWorkout() {
         return workout;
     }
 
@@ -34,7 +34,7 @@ public class WorkoutExercise {
         this.workout = workout;
     }
 
-    public Exercise findExercise() {
+    public Exercise getExercise() {
         return exercise;
     }
 

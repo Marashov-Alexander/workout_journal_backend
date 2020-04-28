@@ -22,7 +22,7 @@ public class Parameter {
     @JoinColumn(name = "parameter_type_id")
     private ParameterType parameterType;
 
-    public Long findId() {
+    public Long getId() {
         return id;
     }
 
@@ -30,7 +30,7 @@ public class Parameter {
         this.id = id;
     }
 
-    public String findName() {
+    public String getName() {
         return name;
     }
 
@@ -38,7 +38,7 @@ public class Parameter {
         this.name = name;
     }
 
-    public MeasureUnit findMeasureUnit() {
+    public MeasureUnit getMeasureUnit() {
         return measureUnit;
     }
 
@@ -46,7 +46,7 @@ public class Parameter {
         this.measureUnit = measureUnit;
     }
 
-    public ParameterType findParameterType() {
+    public ParameterType getParameterType() {
         return parameterType;
     }
 

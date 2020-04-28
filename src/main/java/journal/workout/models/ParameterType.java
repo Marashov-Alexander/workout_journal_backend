@@ -14,7 +14,7 @@ public class ParameterType {
     @Column(name = "name")
     private String name;
 
-    public Long findId() {
+    public Long getId() {
         return id;
     }
 
@@ -22,7 +22,7 @@ public class ParameterType {
         this.id = id;
     }
 
-    public String findName() {
+    public String getName() {
         return name;
     }
 

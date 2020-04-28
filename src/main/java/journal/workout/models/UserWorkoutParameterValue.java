@@ -21,7 +21,7 @@ public class UserWorkoutParameterValue {
     @Column(name = "value")
     private Integer value;
 
-    public Long findId() {
+    public Long getId() {
         return id;
     }
 
@@ -29,7 +29,7 @@ public class UserWorkoutParameterValue {
         this.id = id;
     }
 
-    public UserWorkout findUserWorkout() {
+    public UserWorkout getUserWorkout() {
         return userWorkout;
     }
 
@@ -37,7 +37,7 @@ public class UserWorkoutParameterValue {
         this.userWorkout = userWorkout;
     }
 
-    public Parameter findParameter() {
+    public Parameter getParameter() {
         return parameter;
     }
 
@@ -45,7 +45,7 @@ public class UserWorkoutParameterValue {
         this.parameter = parameter;
     }
 
-    public Integer findValue() {
+    public Integer getValue() {
         return value;
     }
 

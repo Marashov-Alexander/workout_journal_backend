@@ -1,41 +1,23 @@
-package journal.workout.models;
+package journal.workout.models.requests;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "users", schema = "WJDB")
-public class User {
+public class UserBody {
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Column(name = "first_name")
+    @NotNull
     private String first_name;
 
-    @Column(name = "last_name")
     private String last_name;
 
-    @Column(name = "email")
+    @NotNull
     private String email;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "is_male")
     private Character isMale;
 
-    @Column(name = "age")
+    @NotNull
     private Integer age;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getFirst_name() {
         return first_name;

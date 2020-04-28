@@ -17,7 +17,7 @@ public class MeasureUnit {
     @Column(name = "acronym")
     private String acronym;
 
-    public Long findId() {
+    public Long getId() {
         return id;
     }
 
@@ -25,7 +25,7 @@ public class MeasureUnit {
         this.id = id;
     }
 
-    public String findName() {
+    public String getName() {
         return name;
     }
 
@@ -33,7 +33,7 @@ public class MeasureUnit {
         this.name = name;
     }
 
-    public String findAcronym() {
+    public String getAcronym() {
         return acronym;
     }
 

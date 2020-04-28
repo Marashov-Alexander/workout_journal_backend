@@ -19,7 +19,7 @@ public class ExerciseParameter {
     @JoinColumn(name = "parameter_id")
     private Parameter parameter;
 
-    public Long findId() {
+    public Long getId() {
         return id;
     }
 
@@ -27,7 +27,7 @@ public class ExerciseParameter {
         this.id = id;
     }
 
-    public Exercise findExercise() {
+    public Exercise getExercise() {
         return exercise;
     }
 
@@ -35,7 +35,7 @@ public class ExerciseParameter {
         this.exercise = exercise;
     }
 
-    public Parameter findParameter() {
+    public Parameter getParameter() {
         return parameter;
     }
 

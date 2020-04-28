@@ -16,7 +16,7 @@ public class Workout {
     @Column(name = "description")
     private String description;
 
-    public Long findId() {
+    public Long getId() {
         return id;
     }
 
@@ -24,7 +24,7 @@ public class Workout {
         this.id = id;
     }
 
-    public String findName() {
+    public String getName() {
         return name;
     }
 
@@ -32,7 +32,7 @@ public class Workout {
         this.name = name;
     }
 
-    public String findDescription() {
+    public String getDescription() {
         return description;
     }
 

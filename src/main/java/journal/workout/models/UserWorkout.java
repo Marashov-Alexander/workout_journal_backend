@@ -25,7 +25,7 @@ public class UserWorkout {
     @JoinColumn(name = "workout_id")
     private Workout workout;
 
-    public Long findId() {
+    public Long getId() {
         return id;
     }
 
@@ -33,7 +33,7 @@ public class UserWorkout {
         this.id = id;
     }
 
-    public String findName() {
+    public String getName() {
         return name;
     }
 
@@ -41,7 +41,7 @@ public class UserWorkout {
         this.name = name;
     }
 
-    public String findComments() {
+    public String getComments() {
         return comments;
     }
 
@@ -49,7 +49,7 @@ public class UserWorkout {
         this.comments = comments;
     }
 
-    public User findUser() {
+    public User getUser() {
         return user;
     }
 
@@ -57,7 +57,7 @@ public class UserWorkout {
         this.user = user;
     }
 
-    public Workout findWorkout() {
+    public Workout getWorkout() {
         return workout;
     }
 

@@ -21,7 +21,7 @@ public class Exercise {
     @JoinColumn(name = "type_id")
     private ExerciseType exerciseType;
 
-    public Long findId() {
+    public Long getId() {
         return id;
     }
 
@@ -29,7 +29,7 @@ public class Exercise {
         this.id = id;
     }
 
-    public String findName() {
+    public String getName() {
         return name;
     }
 
@@ -37,7 +37,7 @@ public class Exercise {
         this.name = name;
     }
 
-    public String findDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -45,11 +45,12 @@ public class Exercise {
         this.description = description;
     }
 
-    public ExerciseType findExerciseType() {
+    public ExerciseType getExerciseType() {
         return exerciseType;
     }
 
     public void setExerciseType(ExerciseType exerciseType) {
         this.exerciseType = exerciseType;
     }
+
 }
