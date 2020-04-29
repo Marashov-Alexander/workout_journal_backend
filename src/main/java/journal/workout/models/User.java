@@ -1,6 +1,10 @@
 package journal.workout.models;
 
+import journal.workout.validators.ValidEmail;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users", schema = "WJDB")
@@ -14,15 +18,22 @@ public class User {
     @Column(name = "uid")
     private String uid;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "first_name")
     private String first_name;
 
     @Column(name = "last_name")
     private String last_name;
 
+    @ValidEmail
+    @NotNull
+    @NotEmpty
     @Column(name = "email")
     private String email;
 
+    @NotNull
+    @NotEmpty
     @Column(name = "password")
     private String password;
 
