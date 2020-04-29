@@ -1,13 +1,14 @@
 package journal.workout.controllers;
 
+import journal.workout.exceptions.CustomException;
 import journal.workout.models.*;
 import journal.workout.models.requests.*;
 import journal.workout.services.WJService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class AppController {
@@ -19,329 +20,431 @@ public class AppController {
     }
 
     @GetMapping("/workouts/all")
-    @ResponseBody
-    public List<Workout> readWorkouts() {
-        return wjService.readWorkouts();
+    public ResponseEntity<Object> readWorkouts() {
+        return new ResponseEntity<>(wjService.readWorkouts(), HttpStatus.OK);
     }
 
     @GetMapping("/workouts/{workout-id}")
-    @ResponseBody
-    public Workout readWorkout(@PathVariable(name = "workout-id") Long workoutId) {
-        return wjService.readWorkout(workoutId);
+    public ResponseEntity<Object> readWorkout(@PathVariable(name = "workout-id") Long workoutId) {
+        try {
+            return new ResponseEntity<>(wjService.readWorkout(workoutId), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/exercises/all")
-    @ResponseBody
-    public List<Exercise> readExercises() {
-        return wjService.readExercises();
+    public ResponseEntity<Object> readExercises() {
+        return new ResponseEntity<>(wjService.readExercises(), HttpStatus.OK);
     }
 
     @GetMapping("/exercises/by-type/{exercise-type-id}")
-    @ResponseBody
-    public List<Exercise> readExercisesByType(@PathVariable(name = "exercise-type-id") ExerciseType exerciseType) {
-        return wjService.readExercisesByType(exerciseType);
+    public ResponseEntity<Object> readExercisesByType(@PathVariable(name = "exercise-type-id") Long id) {
+        try {
+            return new ResponseEntity<>(wjService.readExercisesByType(id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/exercises/by-workout/{workout-id}")
-    @ResponseBody
-    public List<WorkoutExercise> readExercisesByWorkout(@PathVariable(name = "workout-id") Workout workout) {
-        return wjService.readExercisesByWorkout(workout);
+    public ResponseEntity<Object> readExercisesByWorkout(@PathVariable(name = "workout-id") Long workout) {
+        try {
+            return new ResponseEntity<>(wjService.readExercisesByWorkout(workout), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/exercises/{exercise-id}")
-    @ResponseBody
-    public Exercise readExercise(@PathVariable(name = "exercise-id") Long id) {
-        return wjService.readExercise(id);
+    public ResponseEntity<Object> readExercise(@PathVariable(name = "exercise-id") Long id) {
+        try {
+            return new ResponseEntity<>(wjService.readExercise(id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/exercise-types/all")
-    @ResponseBody
-    public List<ExerciseType> readExerciseTypes() {
-        return wjService.readExerciseTypes();
+    public ResponseEntity<Object> readExerciseTypes() {
+        return new ResponseEntity<>(wjService.readExerciseTypes(), HttpStatus.OK);
     }
 
     @GetMapping("/exercise-types/{exercise-type-id}")
-    @ResponseBody
-    public ExerciseType readExerciseType(@PathVariable(name = "exercise-type-id") Long id) {
-        return wjService.readExerciseType(id);
+    public ResponseEntity<Object> readExerciseType(@PathVariable(name = "exercise-type-id") Long id) {
+        try {
+            return new ResponseEntity<>(wjService.readExerciseType(id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/parameters/all")
-    @ResponseBody
-    public List<Parameter> readParameters() {
-        return wjService.readParameters();
+    public ResponseEntity<Object> readParameters() {
+        return new ResponseEntity<>(wjService.readParameters(), HttpStatus.OK);
     }
 
     @GetMapping("/parameters/by-exercise/{exercise-id}")
-    @ResponseBody
-    public List<ExerciseParameter> readParametersByExercise(@PathVariable(name = "exercise-id") Exercise exercise) {
-        return wjService.readParametersByExercise(exercise);
+    public ResponseEntity<Object> readParametersByExercise(@PathVariable(name = "exercise-id") Long exercise) {
+        try {
+            return new ResponseEntity<>(wjService.readParametersByExercise(exercise), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/parameters/{parameter-id}")
-    @ResponseBody
-    public Parameter readParameter(@PathVariable(name = "parameter-id") Long id) {
-        return wjService.readParameter(id);
+    public ResponseEntity<Object> readParameter(@PathVariable(name = "parameter-id") Long id) {
+        try {
+            return new ResponseEntity<>(wjService.readParameter(id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/parameter-types/all")
-    @ResponseBody
-    public List<ParameterType> readParameterTypes() {
-        return wjService.readParameterTypes();
+    public ResponseEntity<Object> readParameterTypes() {
+         return new ResponseEntity<>(wjService.readParameterTypes(), HttpStatus.OK);
     }
 
     @GetMapping("/parameters-types/{parameter-type-id}")
-    @ResponseBody
-    public ParameterType readParameterType(@PathVariable(name = "parameter-type-id") Long id) {
-        return wjService.readParameterType(id);
+    public ResponseEntity<Object> readParameterType(@PathVariable(name = "parameter-type-id") Long id) {
+        try {
+            return new ResponseEntity<>(wjService.readParameterType(id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/measure-units/all")
-    @ResponseBody
-    public List<MeasureUnit> readMeasureUnits() {
-        return wjService.readMeasureUnits();
+    public ResponseEntity<Object> readMeasureUnits() {
+        return new ResponseEntity<>(wjService.readMeasureUnits(), HttpStatus.OK);
     }
 
     @GetMapping("/measure-units/{measure-unit-id}")
-    @ResponseBody
-    public MeasureUnit readMeasureUnit(@PathVariable(name = "measure-unit-id") Long id) {
-        return wjService.readMeasureUnit(id);
+    public ResponseEntity<Object> readMeasureUnit(@PathVariable(name = "measure-unit-id") Long id) {
+        try {
+            return new ResponseEntity<>(wjService.readMeasureUnit(id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/users/all")
-    @ResponseBody
-    public List<User> readUsers() {
-        return wjService.readUsers();
+    public ResponseEntity<Object> readUsers() {
+        return new ResponseEntity<>(wjService.readUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/users/{user-id}")
-    @ResponseBody
-    public User readUser(@PathVariable(name = "user-id") Long id) {
-        return wjService.readUser(id);
+    public ResponseEntity<Object> readUser(@PathVariable(name = "user-id") Long id) {
+        try {
+            return new ResponseEntity<>(wjService.readUser(id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/user-workouts/all")
-    @ResponseBody
-    public List<UserWorkout> readUserWorkouts() {
-        return wjService.readUserWorkouts();
+    public ResponseEntity<Object> readUserWorkouts() {
+        return new ResponseEntity<>(wjService.readUserWorkouts(), HttpStatus.OK);
     }
 
     @GetMapping("/user-workouts/{user-workout-id}")
-    @ResponseBody
-    public UserWorkout readUserWorkout(@PathVariable(name = "user-workout-id") Long id) {
-        return wjService.readUserWorkout(id);
+    public ResponseEntity<Object> readUserWorkout(@PathVariable(name = "user-workout-id") Long id) {
+        try {
+            return new ResponseEntity<>(wjService.readUserWorkout(id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/user-workouts/parameters/{user-workout-id}")
-    @ResponseBody
-    public List<UserWorkoutParameterValue> readUserWorkoutParameterValues(@PathVariable(name = "user-workout-id") UserWorkout userWorkout) {
-        return wjService.readUserWorkoutParameterValues(userWorkout);
+    public ResponseEntity<Object> readUserWorkoutParameterValues(@PathVariable(name = "user-workout-id") Long userWorkout) {
+        try {
+            return new ResponseEntity<>(wjService.readUserWorkoutParameterValues(userWorkout), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/user-workouts/parameters")
-    @ResponseBody
-    public Long readUserWorkoutParameterValue(
-            @RequestParam(name = "user-workout-id") UserWorkout userWorkout,
-            @RequestParam(name = "parameter-id") Parameter parameter) {
-        return wjService.readUserWorkoutParameterValue(userWorkout, parameter);
+    public ResponseEntity<Object> readUserWorkoutParameterValue(
+            @RequestParam(name = "user-workout-id") Long userWorkout,
+            @RequestParam(name = "parameter-id") Long parameter) {
+        try {
+            return new ResponseEntity<>(wjService.readUserWorkoutParameterValue(userWorkout, parameter), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/exercises/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Exercise createExercise(@Valid @RequestBody Exercise exercise) {
-        return wjService.createExercise(exercise);
+    public ResponseEntity<Object> createExercise(@Valid @RequestBody Exercise exercise) {
+        return new ResponseEntity<>(wjService.createExercise(exercise), HttpStatus.CREATED);
     }
 
     @PostMapping("/exercise-parameters/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ExerciseParameter createExerciseParameter(@Valid @RequestBody ExerciseParameter exerciseParameter) {
-        return wjService.createExerciseParameter(exerciseParameter);
+    public ResponseEntity<Object> createExerciseParameter(@Valid @RequestBody ExerciseParameter exerciseParameter) {
+        return new ResponseEntity<>(wjService.createExerciseParameter(exerciseParameter), HttpStatus.CREATED);
     }
 
     @PostMapping("/exercise-types/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ExerciseType createExerciseType(@Valid @RequestBody ExerciseType exerciseType) {
-        return wjService.createExerciseType(exerciseType);
+    public ResponseEntity<Object> createExerciseType(@Valid @RequestBody ExerciseType exerciseType) {
+        return new ResponseEntity<>(wjService.createExerciseType(exerciseType), HttpStatus.CREATED);
     }
 
     @PostMapping("/measure-units/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public MeasureUnit createMeasureUnit(@Valid @RequestBody MeasureUnit measureUnit) {
-        return wjService.createMeasureUnit(measureUnit);
+    public ResponseEntity<Object> createMeasureUnit(@Valid @RequestBody MeasureUnit measureUnit) {
+        return new ResponseEntity<>(wjService.createMeasureUnit(measureUnit), HttpStatus.CREATED);
     }
 
     @PostMapping("/parameters/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Parameter createParameter(@Valid @RequestBody Parameter parameter) {
-        return wjService.createParameter(parameter);
+    public ResponseEntity<Object> createParameter(@Valid @RequestBody Parameter parameter) {
+        return new ResponseEntity<>(wjService.createParameter(parameter), HttpStatus.CREATED);
     }
 
     @PostMapping("/parameter-types/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ParameterType createParameterType(@Valid @RequestBody ParameterType parameterType) {
-        return wjService.createParameterType(parameterType);
+    public ResponseEntity<Object> createParameterType(@Valid @RequestBody ParameterType parameterType) {
+        return new ResponseEntity<>(wjService.createParameterType(parameterType), HttpStatus.CREATED);
     }
 
     @PostMapping("/users/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@Valid @RequestBody User user) {
-        return wjService.createUser(user);
+    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+        try {
+            return new ResponseEntity<>(wjService.createUser(user), HttpStatus.CREATED);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/user-workouts/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserWorkout createUserWorkout(@Valid @RequestBody UserWorkout userWorkout) {
-        return wjService.createUserWorkout(userWorkout);
+    public ResponseEntity<Object> createUserWorkout(@Valid @RequestBody UserWorkout userWorkout) {
+        return new ResponseEntity<>(wjService.createUserWorkout(userWorkout), HttpStatus.CREATED);
     }
 
     @PostMapping("/user-workout-parameter-values/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserWorkoutParameterValue createUserWorkoutParameterValue(@Valid @RequestBody UserWorkoutParameterValue userWorkoutParameterValue) {
-        return wjService.createUserWorkoutParameterValue(userWorkoutParameterValue);
+    public ResponseEntity<Object> createUserWorkoutParameterValue(@Valid @RequestBody UserWorkoutParameterValue userWorkoutParameterValue) {
+        return new ResponseEntity<>(wjService.createUserWorkoutParameterValue(userWorkoutParameterValue), HttpStatus.CREATED);
     }
 
     @PostMapping("/workouts/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Workout createWorkout(@Valid @RequestBody Workout workout) {
-        return wjService.createWorkout(workout);
+    public ResponseEntity<Object> createWorkout(@Valid @RequestBody Workout workout) {
+        return new ResponseEntity<>(wjService.createWorkout(workout), HttpStatus.CREATED);
     }
 
     @PostMapping("/workout-exercises/")
-    @ResponseStatus(HttpStatus.CREATED)
-    public WorkoutExercise createWorkoutExercise(@Valid @RequestBody WorkoutExercise workoutExercise) {
-        return wjService.createWorkoutExercise(workoutExercise);
+    public ResponseEntity<Object> createWorkoutExercise(@Valid @RequestBody WorkoutExercise workoutExercise) {
+        return new ResponseEntity<>(wjService.createWorkoutExercise(workoutExercise), HttpStatus.CREATED);
     }
 
     @PutMapping("/exercises/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Exercise updateExercise(@Valid @RequestBody ExerciseBody exercise, @PathVariable(name = "id") long id) {
-        return wjService.updateExercise(exercise, id);
+    public ResponseEntity<Object> updateExercise(@Valid @RequestBody ExerciseBody exercise, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateExercise(exercise, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/exercise-parameters/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ExerciseParameter updateExerciseParameter(@Valid @RequestBody ExerciseParameterBody exerciseParameter, @PathVariable(name = "id") long id) {
-        return wjService.updateExerciseParameter(exerciseParameter, id);
+    public ResponseEntity<Object> updateExerciseParameter(@Valid @RequestBody ExerciseParameterBody exerciseParameter, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateExerciseParameter(exerciseParameter, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/exercise-types/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ExerciseType updateExerciseType(@Valid @RequestBody ExerciseTypeBody exerciseType, @PathVariable(name = "id") long id) {
-        return wjService.updateExerciseType(exerciseType, id);
+    public ResponseEntity<Object> updateExerciseType(@Valid @RequestBody ExerciseTypeBody exerciseType, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateExerciseType(exerciseType, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/measure-units/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public MeasureUnit updateMeasureUnit(@Valid @RequestBody MeasureUnitBody measureUnit, @PathVariable(name = "id") long id) {
-        return wjService.updateMeasureUnit(measureUnit, id);
+    
+    public ResponseEntity<Object> updateMeasureUnit(@Valid @RequestBody MeasureUnitBody measureUnit, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateMeasureUnit(measureUnit, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/parameters/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Parameter updateParameter(@Valid @RequestBody ParameterBody parameter, @PathVariable(name = "id") long id) {
-        return wjService.updateParameter(parameter, id);
+    public ResponseEntity<Object> updateParameter(@Valid @RequestBody ParameterBody parameter, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateParameter(parameter, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/parameter-types/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ParameterType updateParameterType(@Valid @RequestBody ParameterTypeBody parameterType, @PathVariable(name = "id") long id) {
-        return wjService.updateParameterType(parameterType, id);
+    public ResponseEntity<Object> updateParameterType(@Valid @RequestBody ParameterTypeBody parameterType, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateParameterType(parameterType, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/users/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public User updateUser(@Valid @RequestBody UserBody user, @PathVariable(name = "id") long id) {
-        return wjService.updateUser(user, id);
+    public ResponseEntity<Object> updateUser(@Valid @RequestBody UserBody user, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateUser(user, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/user-workouts/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserWorkout updateUserWorkout(@Valid @RequestBody UserWorkoutBody userWorkout, @PathVariable(name = "id") long id) {
-        return wjService.updateUserWorkout(userWorkout, id);
+    public ResponseEntity<Object> updateUserWorkout(@Valid @RequestBody UserWorkoutBody userWorkout, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateUserWorkout(userWorkout, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/user-workout-parameter-values/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserWorkoutParameterValue updateUserWorkoutParameterValue(@Valid @RequestBody UserWorkoutParameterValueBody userWorkoutParameterValue, @PathVariable(name = "id") long id) {
-        return wjService.updateUserWorkoutParameterValue(userWorkoutParameterValue, id);
+    public ResponseEntity<Object> updateUserWorkoutParameterValue(@Valid @RequestBody UserWorkoutParameterValueBody userWorkoutParameterValue, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateUserWorkoutParameterValue(userWorkoutParameterValue, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/workouts/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Workout updateWorkout(@Valid @RequestBody WorkoutBody workout, @PathVariable(name = "id") long id) {
-        return wjService.updateWorkout(workout, id);
+    public ResponseEntity<Object> updateWorkout(@Valid @RequestBody WorkoutBody workout, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateWorkout(workout, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/workout-exercises/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public WorkoutExercise updateWorkoutExercise(@Valid @RequestBody WorkoutExerciseBody workoutExercise, @PathVariable(name = "id") long id) {
-        return wjService.updateWorkoutExercise(workoutExercise, id);
+    public ResponseEntity<Object> updateWorkoutExercise(@Valid @RequestBody WorkoutExerciseBody workoutExercise, @PathVariable(name = "id") long id) {
+        try {
+            return new ResponseEntity<>(wjService.updateWorkoutExercise(workoutExercise, id), HttpStatus.OK);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/exercises/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteExercise(@PathVariable(name = "id") long id) {
-        wjService.deleteExercise(id);
+    public ResponseEntity<Object> deleteExercise(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteExercise(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/exercise-parameters/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteExerciseParameter(@PathVariable(name = "id") long id) {
-        wjService.deleteExerciseParameter(id);
+    public ResponseEntity<Object> deleteExerciseParameter(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteExerciseParameter(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/exercise-types/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteExerciseType(@PathVariable(name = "id") long id) {
-        wjService.deleteExerciseType(id);
+    public ResponseEntity<Object> deleteExerciseType(@PathVariable(name = "id") long id) {
+      try {
+          wjService.deleteExerciseType(id);
+          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/measure-units/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteMeasureUnit(@PathVariable(name = "id") long id) {
-        wjService.deleteMeasureUnit(id);
+    public ResponseEntity<Object> deleteMeasureUnit(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteMeasureUnit(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/parameters/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteParameter(@PathVariable(name = "id") long id) {
-        wjService.deleteParameter(id);
+    public ResponseEntity<Object> deleteParameter(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteParameter(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/parameter-types/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteParameterType(@PathVariable(name = "id") long id) {
-        wjService.deleteParameterType(id);
+    public ResponseEntity<Object> deleteParameterType(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteParameterType(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/users/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteUser(@PathVariable(name = "id") long id) {
-        wjService.deleteUser(id);
+    public ResponseEntity<Object> deleteUser(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteUser(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/user-workouts/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteUserWorkout(@PathVariable(name = "id") long id) {
-        wjService.deleteUserWorkout(id);
+    public ResponseEntity<Object> deleteUserWorkout(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteUserWorkout(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/user-workout-parameter-values/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteUserWorkoutParameterValue(@PathVariable(name = "id") long id) {
-        wjService.deleteUserWorkoutParameterValue(id);
+    public ResponseEntity<Object> deleteUserWorkoutParameterValue(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteUserWorkoutParameterValue(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/workouts/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteWorkout(@PathVariable(name = "id") long id) {
-        wjService.deleteWorkout(id);
+    public ResponseEntity<Object> deleteWorkout(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteWorkout(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/workout-exercises/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteWorkoutExercise(@PathVariable(name = "id") long id) {
-        wjService.deleteWorkoutExercise(id);
+    public ResponseEntity<Object> deleteWorkoutExercise(@PathVariable(name = "id") long id) {
+        try {
+            wjService.deleteWorkoutExercise(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

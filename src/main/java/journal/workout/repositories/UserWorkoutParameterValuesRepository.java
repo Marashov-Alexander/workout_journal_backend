@@ -6,11 +6,12 @@ import journal.workout.models.UserWorkoutParameterValue;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserWorkoutParameterValuesRepository extends CrudRepository<UserWorkoutParameterValue, Long> {
     List<UserWorkoutParameterValue> findAll();
 
-    List<UserWorkoutParameterValue> findAllByUserWorkout(UserWorkout userWorkout);
+    Optional<List<UserWorkoutParameterValue>> findAllByUserWorkout(UserWorkout userWorkout);
 
-    Long findValueByUserWorkoutAndParameter(UserWorkout userWorkout, Parameter parameter);
+    Optional<Long> findValueByUserWorkoutAndParameter(UserWorkout userWorkout, Parameter parameter);
 }

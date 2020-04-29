@@ -1,5 +1,6 @@
 package journal.workout.services;
 
+import journal.workout.exceptions.CustomException;
 import journal.workout.models.*;
 import journal.workout.models.requests.*;
 
@@ -8,40 +9,40 @@ import java.util.List;
 public interface WJService {
 
     List<Workout> readWorkouts();
-    Workout readWorkout(Long id);
+    Workout readWorkout(Long id) throws CustomException;
 
     List<Exercise> readExercises();
 
-    List<Exercise> readExercisesByType(ExerciseType exerciseType);
+    List<Exercise> readExercisesByType(Long exerciseTypeId) throws CustomException;
 
-    List<WorkoutExercise> readExercisesByWorkout(Workout workout);
+    List<WorkoutExercise> readExercisesByWorkout(Long workoutId) throws CustomException;
 
-    Exercise readExercise(Long id);
+    Exercise readExercise(Long id) throws CustomException;
 
     List<ExerciseType> readExerciseTypes();
-    ExerciseType readExerciseType(Long id);
+    ExerciseType readExerciseType(Long id) throws CustomException;
 
     List<Parameter> readParameters();
 
-    List<ExerciseParameter> readParametersByExercise(Exercise exercise);
+    List<ExerciseParameter> readParametersByExercise(Long exerciseId) throws CustomException;
 
-    Parameter readParameter(Long id);
+    Parameter readParameter(Long id) throws CustomException;
 
     List<ParameterType> readParameterTypes();
-    ParameterType readParameterType(Long id);
+    ParameterType readParameterType(Long id) throws CustomException;
 
     List<MeasureUnit> readMeasureUnits();
-    MeasureUnit readMeasureUnit(Long id);
+    MeasureUnit readMeasureUnit(Long id) throws CustomException;
 
     List<User> readUsers();
-    User readUser(Long id);
+    User readUser(Long id) throws CustomException;
 
     List<UserWorkout> readUserWorkouts(); // нужна авторизация
-    UserWorkout readUserWorkout(Long id);
+    UserWorkout readUserWorkout(Long id) throws CustomException;
 
-    List<UserWorkoutParameterValue> readUserWorkoutParameterValues(UserWorkout userWorkout);
+    List<UserWorkoutParameterValue> readUserWorkoutParameterValues(Long userWorkoutId) throws CustomException;
 
-    Long readUserWorkoutParameterValue(UserWorkout userWorkout, Parameter parameter);
+    Long readUserWorkoutParameterValue(Long userWorkoutId, Long parameterId) throws CustomException;
 
     Exercise createExercise(Exercise exercise);
     ExerciseParameter createExerciseParameter(ExerciseParameter exerciseParameter);
@@ -49,34 +50,34 @@ public interface WJService {
     MeasureUnit createMeasureUnit(MeasureUnit measureUnit);
     Parameter createParameter(Parameter parameter);
     ParameterType createParameterType(ParameterType parameterType);
-    User createUser(User user);
+    User createUser(User user) throws CustomException;
     UserWorkout createUserWorkout(UserWorkout userWorkout);
     UserWorkoutParameterValue createUserWorkoutParameterValue(UserWorkoutParameterValue userWorkoutParameterValue);
     Workout createWorkout(Workout workout);
     WorkoutExercise createWorkoutExercise(WorkoutExercise workoutExercise);
 
-    Exercise updateExercise(ExerciseBody exercise, long id);
-    ExerciseParameter updateExerciseParameter(ExerciseParameterBody exerciseParameter, long id);
-    ExerciseType updateExerciseType(ExerciseTypeBody exerciseType, long id);
-    MeasureUnit updateMeasureUnit(MeasureUnitBody measureUnit, long id);
-    Parameter updateParameter(ParameterBody parameter, long id);
-    ParameterType updateParameterType(ParameterTypeBody parameterType, long id);
-    User updateUser(UserBody user, long id);
-    UserWorkout updateUserWorkout(UserWorkoutBody userWorkout, long id);
-    UserWorkoutParameterValue updateUserWorkoutParameterValue(UserWorkoutParameterValueBody userWorkoutParameterValue, long id);
-    Workout updateWorkout(WorkoutBody workout, long id);
-    WorkoutExercise updateWorkoutExercise(WorkoutExerciseBody workoutExercise, long id);
+    Exercise updateExercise(ExerciseBody exercise, long id) throws CustomException;
+    ExerciseParameter updateExerciseParameter(ExerciseParameterBody exerciseParameter, long id) throws CustomException;
+    ExerciseType updateExerciseType(ExerciseTypeBody exerciseType, long id) throws CustomException;
+    MeasureUnit updateMeasureUnit(MeasureUnitBody measureUnit, long id) throws CustomException;
+    Parameter updateParameter(ParameterBody parameter, long id) throws CustomException;
+    ParameterType updateParameterType(ParameterTypeBody parameterType, long id) throws CustomException;
+    User updateUser(UserBody user, long id) throws CustomException;
+    UserWorkout updateUserWorkout(UserWorkoutBody userWorkout, long id) throws CustomException;
+    UserWorkoutParameterValue updateUserWorkoutParameterValue(UserWorkoutParameterValueBody userWorkoutParameterValue, long id) throws CustomException;
+    Workout updateWorkout(WorkoutBody workout, long id) throws CustomException;
+    WorkoutExercise updateWorkoutExercise(WorkoutExerciseBody workoutExercise, long id) throws CustomException;
 
-    void deleteExercise(long id);
-    void deleteExerciseParameter(long id);
-    void deleteExerciseType(long id);
-    void deleteMeasureUnit(long id);
-    void deleteParameter(long id);
-    void deleteParameterType(long id);
-    void deleteUser(long id);
-    void deleteUserWorkout(long id);
-    void deleteUserWorkoutParameterValue(long id);
-    void deleteWorkout(long id);
-    void deleteWorkoutExercise(long id);
+    void deleteExercise(long id) throws CustomException;
+    void deleteExerciseParameter(long id) throws CustomException;
+    void deleteExerciseType(long id) throws CustomException;
+    void deleteMeasureUnit(long id) throws CustomException;
+    void deleteParameter(long id) throws CustomException;
+    void deleteParameterType(long id) throws CustomException;
+    void deleteUser(long id) throws CustomException;
+    void deleteUserWorkout(long id) throws CustomException;
+    void deleteUserWorkoutParameterValue(long id) throws CustomException;
+    void deleteWorkout(long id) throws CustomException;
+    void deleteWorkoutExercise(long id) throws CustomException;
 
 }

@@ -5,9 +5,10 @@ import journal.workout.models.WorkoutExercise;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface WorkoutExercisesRepository extends CrudRepository<WorkoutExercise, Long> {
     List<WorkoutExercise> findAll();
 
-    List<WorkoutExercise> findAllByWorkout(Workout workout);
+    Optional<List<WorkoutExercise>> findAllByWorkout(Workout workout);
 }
