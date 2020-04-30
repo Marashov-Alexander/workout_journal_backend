@@ -1,5 +1,7 @@
 package journal.workout.models;
 
+import journal.workout.models.requests.ExerciseBody;
+
 import javax.persistence.*;
 
 @Entity

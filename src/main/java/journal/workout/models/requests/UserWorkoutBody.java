@@ -1,10 +1,12 @@
 package journal.workout.models.requests;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class UserWorkoutBody {
 
     @NotNull
+    @NotEmpty
     private String name;
 
     private String comments;

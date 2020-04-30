@@ -1,18 +1,28 @@
 package journal.workout.models.requests;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 public class UserBody {
 
     private String uid;
 
+    @NotNull
+    @NotEmpty
     private String first_name;
 
     private String last_name;
 
+    @NotNull
+    @NotEmpty
     private String email;
 
+    @NotNull
+    @NotEmpty
     private String password;
 
-    private String birthday;
+    private Date birthday;
 
     private String gender;
 
@@ -26,11 +36,11 @@ public class UserBody {
         this.uid = uid;
     }
 
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 

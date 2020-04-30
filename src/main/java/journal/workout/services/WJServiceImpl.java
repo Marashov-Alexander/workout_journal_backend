@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -233,72 +232,84 @@ public class WJServiceImpl implements WJService {
     }
 
     @Override
-    public Exercise createExercise(Exercise exercise) {
-        exercisesRepository.save(exercise);
+    public Exercise createExercise(ExerciseBody exerciseBody) throws CustomException {
+        Exercise exercise = new Exercise();
+        copyAndSave(exercise, exerciseBody);
         return exercise;
     }
 
     @Override
-    public ExerciseParameter createExerciseParameter(ExerciseParameter exerciseParameter) {
-        exercisesParametersRepository.save(exerciseParameter);
+    public ExerciseParameter createExerciseParameter(ExerciseParameterBody exerciseParameterBody) throws CustomException {
+        ExerciseParameter exerciseParameter = new ExerciseParameter();
+        copyAndSave(exerciseParameter, exerciseParameterBody);
         return exerciseParameter;
     }
 
     @Override
-    public ExerciseType createExerciseType(ExerciseType exerciseType) {
-        exerciseTypesRepository.save(exerciseType);
+    public ExerciseType createExerciseType(ExerciseTypeBody exerciseTypeBody) {
+        ExerciseType exerciseType = new ExerciseType();
+        copyAndSave(exerciseType, exerciseTypeBody);
         return exerciseType;
     }
 
     @Override
-    public MeasureUnit createMeasureUnit(MeasureUnit measureUnit) {
-        measureUnitsRepository.save(measureUnit);
+    public MeasureUnit createMeasureUnit(MeasureUnitBody measureUnitBody) {
+        MeasureUnit measureUnit = new MeasureUnit();
+        copyAndSave(measureUnit, measureUnitBody);
         return measureUnit;
     }
 
     @Override
-    public Parameter createParameter(Parameter parameter) {
-        parametersRepository.save(parameter);
+    public Parameter createParameter(ParameterBody parameterBody) throws CustomException {
+        Parameter parameter = new Parameter();
+        copyAndSave(parameter, parameterBody);
         return parameter;
     }
 
     @Override
-    public ParameterType createParameterType(ParameterType parameterType) {
-        parameterTypesRepository.save(parameterType);
+    public ParameterType createParameterType(ParameterTypeBody parameterTypeBody) {
+        ParameterType parameterType = new ParameterType();
+        copyAndSave(parameterType, parameterTypeBody);
         return parameterType;
     }
 
     @Override
-    public User createUser(User user) throws CustomException {
-        if (usersRepository.findByEmail(user.getEmail()) == null) {
-            usersRepository.save(user);
+    public User createUser(UserBody userBody) throws CustomException {
+        if (usersRepository.findByEmail(userBody.getEmail()) == null) {
+            User user = new User();
+            copyAndSave(user, userBody);
             return user;
         } else {
-            throw new CustomException("User with email " + user.getEmail() + " is already exists");
+            throw new CustomException("User with email " + userBody.getEmail() + " is already exists");
         }
     }
 
     @Override
-    public UserWorkout createUserWorkout(UserWorkout userWorkout) {
-        userWorkoutsRepository.save(userWorkout);
+    public UserWorkout createUserWorkout(UserWorkoutBody userWorkoutBody) throws CustomException {
+
+        UserWorkout userWorkout = new UserWorkout();
+        copyAndSave(userWorkout, userWorkoutBody);
         return userWorkout;
     }
 
     @Override
-    public UserWorkoutParameterValue createUserWorkoutParameterValue(UserWorkoutParameterValue userWorkoutParameterValue) {
-        userWorkoutParameterValuesRepository.save(userWorkoutParameterValue);
+    public UserWorkoutParameterValue createUserWorkoutParameterValue(UserWorkoutParameterValueBody userWorkoutParameterValueBody) throws CustomException {
+        UserWorkoutParameterValue userWorkoutParameterValue = new UserWorkoutParameterValue();
+        copyAndSave(userWorkoutParameterValue, userWorkoutParameterValueBody);
         return userWorkoutParameterValue;
     }
 
     @Override
-    public Workout createWorkout(Workout workout) {
-        workoutsRepository.save(workout);
+    public Workout createWorkout(WorkoutBody workoutBody) {
+        Workout workout = new Workout();
+        copyAndSave(workout, workoutBody);
         return workout;
     }
 
     @Override
-    public WorkoutExercise createWorkoutExercise(WorkoutExercise workoutExercise) {
-        workoutExercisesRepository.save(workoutExercise);
+    public WorkoutExercise createWorkoutExercise(WorkoutExerciseBody workoutExerciseBody) throws CustomException {
+        WorkoutExercise workoutExercise = new WorkoutExercise();
+        copyAndSave(workoutExercise, workoutExerciseBody);
         return workoutExercise;
     }
 
@@ -309,9 +320,17 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such exercise");
         }
         Exercise exercise = optionalExercise.get();
+        copyAndSave(exercise, exerciseBody);
+        return exercise;
+    }
+
+    private void copyAndSave(Exercise exercise, ExerciseBody exerciseBody) throws CustomException {
         if (exerciseBody.getExerciseTypeId() != null) {
-            ExerciseType exerciseType = exerciseTypesRepository.findById(exerciseBody.getExerciseTypeId()).orElseThrow(NoSuchElementException::new);
-            exercise.setExerciseType(exerciseType);
+            Optional<ExerciseType> optionalExerciseType = exerciseTypesRepository.findById(exerciseBody.getExerciseTypeId());
+            if (optionalExerciseType.isEmpty()) {
+                throw new CustomException("No such exercise type");
+            }
+            exercise.setExerciseType(optionalExerciseType.get());
         }
 
         if (exerciseBody.getDescription() != null) {
@@ -322,7 +341,6 @@ public class WJServiceImpl implements WJService {
             exercise.setName(exerciseBody.getName());
         }
         exercisesRepository.save(exercise);
-        return exercise;
     }
 
     @Override
@@ -332,17 +350,27 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such exercise parameter");
         }
         ExerciseParameter exerciseParameter = optionalExerciseParameter.get();
+        copyAndSave(exerciseParameter, exerciseParameterBody);
+        return exerciseParameter;
+    }
+
+    private void copyAndSave(ExerciseParameter exerciseParameter, ExerciseParameterBody exerciseParameterBody) throws CustomException {
         if (exerciseParameterBody.getExerciseId() != null) {
-            Exercise exercise = exercisesRepository.findById(exerciseParameterBody.getExerciseId()).orElseThrow(NoSuchElementException::new);
-            exerciseParameter.setExercise(exercise);
+            Optional<Exercise> optionalExercise = exercisesRepository.findById(exerciseParameterBody.getExerciseId());
+            if (optionalExercise.isEmpty()) {
+                throw new CustomException("No such exercise");
+            }
+            exerciseParameter.setExercise(optionalExercise.get());
         }
 
         if (exerciseParameterBody.getParameterId() != null) {
-            Parameter parameter = parametersRepository.findById(exerciseParameterBody.getParameterId()).orElseThrow(NoSuchElementException::new);
-            exerciseParameter.setParameter(parameter);
+            Optional<Parameter> optionalParameter = parametersRepository.findById(exerciseParameterBody.getParameterId());
+            if (optionalParameter.isEmpty()) {
+                throw new CustomException("No such parameter");
+            }
+            exerciseParameter.setParameter(optionalParameter.get());
         }
         exercisesParametersRepository.save(exerciseParameter);
-        return exerciseParameter;
     }
 
     @Override
@@ -352,11 +380,15 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such exercise type");
         }
         ExerciseType exerciseType = optionalExerciseType.get();
+        copyAndSave(exerciseType, exerciseTypeBody);
+        return exerciseType;
+    }
+
+    private void copyAndSave(ExerciseType exerciseType, ExerciseTypeBody exerciseTypeBody) {
         if (exerciseTypeBody.getName() != null) {
             exerciseType.setName(exerciseTypeBody.getName());
         }
         exerciseTypesRepository.save(exerciseType);
-        return exerciseType;
     }
 
     @Override
@@ -366,6 +398,11 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such measure unit");
         }
         MeasureUnit measureUnit = optionalMeasureUnit.get();
+        copyAndSave(measureUnit, measureUnitBody);
+        return measureUnit;
+    }
+
+    private void copyAndSave(MeasureUnit measureUnit, MeasureUnitBody measureUnitBody) {
         if (measureUnitBody.getName() != null) {
             measureUnit.setName(measureUnitBody.getName());
         }
@@ -374,7 +411,6 @@ public class WJServiceImpl implements WJService {
             measureUnit.setAcronym(measureUnitBody.getAcronym());
         }
         measureUnitsRepository.save(measureUnit);
-        return measureUnit;
     }
 
     @Override
@@ -384,21 +420,31 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such parameter");
         }
         Parameter parameter = optionalParameter.get();
+        copyAndSave(parameter, parameterBody);
+        return parameter;
+    }
+
+    private void copyAndSave(Parameter parameter, ParameterBody parameterBody) throws CustomException {
         if (parameterBody.getName() != null) {
             parameter.setName(parameterBody.getName());
         }
 
         if (parameterBody.getMeasureUnitId() != null) {
-            MeasureUnit measureUnit = measureUnitsRepository.findById(parameterBody.getMeasureUnitId()).orElseThrow(NoSuchElementException::new);
-            parameter.setMeasureUnit(measureUnit);
+            Optional<MeasureUnit> optionalMeasureUnit = measureUnitsRepository.findById(parameterBody.getMeasureUnitId());
+            if (optionalMeasureUnit.isEmpty()) {
+                throw new CustomException("No such measure unit");
+            }
+            parameter.setMeasureUnit(optionalMeasureUnit.get());
         }
 
         if (parameterBody.getParameterTypeId() != null) {
-            ParameterType parameterType = parameterTypesRepository.findById(parameterBody.getParameterTypeId()).orElseThrow(NoSuchElementException::new);
-            parameter.setParameterType(parameterType);
+            Optional<ParameterType> optionalParameterType = parameterTypesRepository.findById(parameterBody.getParameterTypeId());
+            if (optionalParameterType.isEmpty()) {
+                throw new CustomException("No such parameter type");
+            }
+            parameter.setParameterType(optionalParameterType.get());
         }
         parametersRepository.save(parameter);
-        return parameter;
     }
 
     @Override
@@ -408,11 +454,15 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such parameter type");
         }
         ParameterType parameterType = optionalParameterType.get();
+        copyAndSave(parameterType, parameterTypeBody);
+        return parameterType;
+    }
+
+    private void copyAndSave(ParameterType parameterType, ParameterTypeBody parameterTypeBody) {
         if (parameterTypeBody.getName() != null) {
             parameterType.setName(parameterTypeBody.getName());
         }
         parameterTypesRepository.save(parameterType);
-        return parameterType;
     }
 
     @Override
@@ -422,6 +472,11 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such user");
         }
         User user = optionalUser.get();
+        copyAndSave(user, userBody);
+        return user;
+    }
+
+    private void copyAndSave(User user, UserBody userBody) {
         if (userBody.getBirthday() != null) {
             user.setBirthday(userBody.getBirthday());
         }
@@ -454,7 +509,6 @@ public class WJServiceImpl implements WJService {
             user.setPassword(userBody.getPassword());
         }
         usersRepository.save(user);
-        return user;
     }
 
     @Override
@@ -464,6 +518,11 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such user workout");
         }
         UserWorkout userWorkout = optionalUserWorkout.get();
+        copyAndSave(userWorkout, userWorkoutBody);
+        return userWorkout;
+    }
+
+    private void copyAndSave(UserWorkout userWorkout, UserWorkoutBody userWorkoutBody) throws CustomException {
         if (userWorkoutBody.getComments() != null) {
             userWorkout.setComments(userWorkoutBody.getComments());
         }
@@ -472,16 +531,21 @@ public class WJServiceImpl implements WJService {
         }
 
         if (userWorkoutBody.getUserId() != null) {
-            User user = usersRepository.findById(userWorkoutBody.getUserId()).orElseThrow(NoSuchElementException::new);
-            userWorkout.setUser(user);
+            Optional<User> optionalUser = usersRepository.findById(userWorkoutBody.getUserId());
+            if (optionalUser.isEmpty()) {
+                throw new CustomException("No such user");
+            }
+            userWorkout.setUser(optionalUser.get());
         }
 
         if (userWorkoutBody.getWorkoutId() != null) {
-            Workout workout = workoutsRepository.findById(userWorkoutBody.getWorkoutId()).orElseThrow(NoSuchElementException::new);
-            userWorkout.setWorkout(workout);
+            Optional<Workout> optionalWorkout = workoutsRepository.findById(userWorkoutBody.getWorkoutId());
+            if (optionalWorkout.isEmpty()) {
+                throw new CustomException("No such optional workout");
+            }
+            userWorkout.setWorkout(optionalWorkout.get());
         }
         userWorkoutsRepository.save(userWorkout);
-        return userWorkout;
     }
 
     @Override
@@ -491,21 +555,31 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such user workout parameter value");
         }
         UserWorkoutParameterValue userWorkoutParameterValue = optionalUserWorkoutParameterValue.get();
+        copyAndSave(userWorkoutParameterValue, userWorkoutParameterValueBody);
+        return userWorkoutParameterValue;
+    }
+
+    private void copyAndSave(UserWorkoutParameterValue userWorkoutParameterValue, UserWorkoutParameterValueBody userWorkoutParameterValueBody) throws CustomException {
         if (userWorkoutParameterValueBody.getParameterId() != null) {
-            Parameter parameter = parametersRepository.findById(userWorkoutParameterValueBody.getParameterId()).orElseThrow(NoSuchElementException::new);
-            userWorkoutParameterValue.setParameter(parameter);
+            Optional<Parameter> optionalParameter = parametersRepository.findById(userWorkoutParameterValueBody.getParameterId());
+            if (optionalParameter.isEmpty()) {
+                throw new CustomException("No such parameter");
+            }
+            userWorkoutParameterValue.setParameter(optionalParameter.get());
         }
 
         if (userWorkoutParameterValueBody.getUserWorkoutId() != null) {
-            UserWorkout userWorkout = userWorkoutsRepository.findById(userWorkoutParameterValueBody.getUserWorkoutId()).orElseThrow(NoSuchElementException::new);
-            userWorkoutParameterValue.setUserWorkout(userWorkout);
+            Optional<UserWorkout> optionalUserWorkout = userWorkoutsRepository.findById(userWorkoutParameterValueBody.getUserWorkoutId());
+            if (optionalUserWorkout.isEmpty()) {
+                throw new CustomException("No such user workout");
+            }
+            userWorkoutParameterValue.setUserWorkout(optionalUserWorkout.get());
         }
 
         if (userWorkoutParameterValueBody.getValue() != null) {
             userWorkoutParameterValue.setValue(userWorkoutParameterValueBody.getValue());
         }
         userWorkoutParameterValuesRepository.save(userWorkoutParameterValue);
-        return userWorkoutParameterValue;
     }
 
     @Override
@@ -515,6 +589,11 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such workout");
         }
         Workout workout = optionalWorkout.get();
+        copyAndSave(workout, workoutBody);
+        return workout;
+    }
+
+    private void copyAndSave(Workout workout, WorkoutBody workoutBody) {
         if (workoutBody.getDescription() != null) {
             workout.setDescription(workoutBody.getDescription());
         }
@@ -522,7 +601,6 @@ public class WJServiceImpl implements WJService {
             workout.setName(workoutBody.getName());
         }
         workoutsRepository.save(workout);
-        return workout;
     }
 
     @Override
@@ -532,17 +610,27 @@ public class WJServiceImpl implements WJService {
             throw new CustomException("No such workout exercise");
         }
         WorkoutExercise workoutExercise = optionalWorkoutExercise.get();
+        copyAndSave(workoutExercise, workoutExerciseBody);
+        return workoutExercise;
+    }
+
+    private void copyAndSave(WorkoutExercise workoutExercise, WorkoutExerciseBody workoutExerciseBody) throws CustomException {
         if (workoutExerciseBody.getExerciseId() != null) {
-            Exercise exercise = exercisesRepository.findById(workoutExerciseBody.getExerciseId()).orElseThrow(NoSuchElementException::new);
-            workoutExercise.setExercise(exercise);
+            Optional<Exercise> optionalExercise = exercisesRepository.findById(workoutExerciseBody.getExerciseId());
+            if (optionalExercise.isEmpty()) {
+                throw new CustomException("No such exercise");
+            }
+            workoutExercise.setExercise(optionalExercise.get());
         }
 
         if (workoutExerciseBody.getWorkoutId() != null) {
-            Workout workout = workoutsRepository.findById(workoutExerciseBody.getWorkoutId()).orElseThrow(NoSuchElementException::new);
-            workoutExercise.setWorkout(workout);
+            Optional<Workout> optionalWorkout = workoutsRepository.findById(workoutExerciseBody.getWorkoutId());
+            if (optionalWorkout.isEmpty()) {
+                throw new CustomException("No such workout");
+            }
+            workoutExercise.setWorkout(optionalWorkout.get());
         }
         workoutExercisesRepository.save(workoutExercise);
-        return workoutExercise;
     }
 
     @Override

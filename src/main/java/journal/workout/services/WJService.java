@@ -44,17 +44,17 @@ public interface WJService {
 
     Long readUserWorkoutParameterValue(Long userWorkoutId, Long parameterId) throws CustomException;
 
-    Exercise createExercise(Exercise exercise);
-    ExerciseParameter createExerciseParameter(ExerciseParameter exerciseParameter);
-    ExerciseType createExerciseType(ExerciseType exerciseType);
-    MeasureUnit createMeasureUnit(MeasureUnit measureUnit);
-    Parameter createParameter(Parameter parameter);
-    ParameterType createParameterType(ParameterType parameterType);
-    User createUser(User user) throws CustomException;
-    UserWorkout createUserWorkout(UserWorkout userWorkout);
-    UserWorkoutParameterValue createUserWorkoutParameterValue(UserWorkoutParameterValue userWorkoutParameterValue);
-    Workout createWorkout(Workout workout);
-    WorkoutExercise createWorkoutExercise(WorkoutExercise workoutExercise);
+    Exercise createExercise(ExerciseBody exerciseBody) throws CustomException;
+    ExerciseParameter createExerciseParameter(ExerciseParameterBody exerciseParameterBody) throws CustomException;
+    ExerciseType createExerciseType(ExerciseTypeBody exerciseTypeBody);
+    MeasureUnit createMeasureUnit(MeasureUnitBody measureUnitBody);
+    Parameter createParameter(ParameterBody parameterBody) throws CustomException;
+    ParameterType createParameterType(ParameterTypeBody parameterTypeBody);
+    User createUser(UserBody userBody) throws CustomException;
+    UserWorkout createUserWorkout(UserWorkoutBody userWorkoutBody) throws CustomException;
+    UserWorkoutParameterValue createUserWorkoutParameterValue(UserWorkoutParameterValueBody userWorkoutParameterValueBody) throws CustomException;
+    Workout createWorkout(WorkoutBody workoutBody);
+    WorkoutExercise createWorkoutExercise(WorkoutExerciseBody workoutExerciseBody) throws CustomException;
 
     Exercise updateExercise(ExerciseBody exercise, long id) throws CustomException;
     ExerciseParameter updateExerciseParameter(ExerciseParameterBody exerciseParameter, long id) throws CustomException;

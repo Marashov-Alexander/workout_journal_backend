@@ -1,13 +1,16 @@
 package journal.workout.models.requests;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class MeasureUnitBody {
 
     @NotNull
+    @NotEmpty
     private String name;
 
     @NotNull
+    @NotEmpty
     private String acronym;
 
     public String getName() {

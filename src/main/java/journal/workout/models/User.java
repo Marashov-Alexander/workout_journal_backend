@@ -5,6 +5,7 @@ import journal.workout.validators.ValidEmail;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Entity
 @Table(name = "users", schema = "WJDB")
@@ -41,7 +42,7 @@ public class User {
     private String gender;
 
     @Column(name = "birthday")
-    private String birthday;
+    private Date birthday;
 
     @Column(name = "avatarurl")
     private String avatarUrl;
@@ -62,11 +63,11 @@ public class User {
         this.gender = gender;
     }
 
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 

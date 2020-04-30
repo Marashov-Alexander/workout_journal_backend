@@ -4,11 +4,15 @@ import journal.workout.exceptions.CustomException;
 import journal.workout.models.*;
 import journal.workout.models.requests.*;
 import journal.workout.services.WJService;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @RestController
 public class AppController {
@@ -107,7 +111,7 @@ public class AppController {
          return new ResponseEntity<>(wjService.readParameterTypes(), HttpStatus.OK);
     }
 
-    @GetMapping("/parameters-types/{parameter-type-id}")
+    @GetMapping("/parameter-types/{parameter-type-id}")
     public ResponseEntity<Object> readParameterType(@PathVariable(name = "parameter-type-id") Long id) {
         try {
             return new ResponseEntity<>(wjService.readParameterType(id), HttpStatus.OK);
@@ -178,38 +182,50 @@ public class AppController {
         }
     }
 
-    @PostMapping("/exercises/")
-    public ResponseEntity<Object> createExercise(@Valid @RequestBody Exercise exercise) {
-        return new ResponseEntity<>(wjService.createExercise(exercise), HttpStatus.CREATED);
+    @PostMapping("/exercises/create")
+    public ResponseEntity<Object> createExercise(@Valid @RequestBody ExerciseBody exercise) {
+        try {
+            return new ResponseEntity<>(wjService.createExercise(exercise), HttpStatus.CREATED);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/exercise-parameters/")
-    public ResponseEntity<Object> createExerciseParameter(@Valid @RequestBody ExerciseParameter exerciseParameter) {
-        return new ResponseEntity<>(wjService.createExerciseParameter(exerciseParameter), HttpStatus.CREATED);
+    @PostMapping("/exercise-parameters/create")
+    public ResponseEntity<Object> createExerciseParameter(@Valid @RequestBody ExerciseParameterBody exerciseParameter) {
+        try {
+            return new ResponseEntity<>(wjService.createExerciseParameter(exerciseParameter), HttpStatus.CREATED);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/exercise-types/")
-    public ResponseEntity<Object> createExerciseType(@Valid @RequestBody ExerciseType exerciseType) {
+    @PostMapping("/exercise-types/create")
+    public ResponseEntity<Object> createExerciseType(@Valid @RequestBody ExerciseTypeBody exerciseType) {
         return new ResponseEntity<>(wjService.createExerciseType(exerciseType), HttpStatus.CREATED);
     }
 
-    @PostMapping("/measure-units/")
-    public ResponseEntity<Object> createMeasureUnit(@Valid @RequestBody MeasureUnit measureUnit) {
+    @PostMapping("/measure-units/create")
+    public ResponseEntity<Object> createMeasureUnit(@Valid @RequestBody MeasureUnitBody measureUnit) {
         return new ResponseEntity<>(wjService.createMeasureUnit(measureUnit), HttpStatus.CREATED);
     }
 
-    @PostMapping("/parameters/")
-    public ResponseEntity<Object> createParameter(@Valid @RequestBody Parameter parameter) {
-        return new ResponseEntity<>(wjService.createParameter(parameter), HttpStatus.CREATED);
+    @PostMapping("/parameters/create")
+    public ResponseEntity<Object> createParameter(@Valid @RequestBody ParameterBody parameter) {
+        try {
+            return new ResponseEntity<>(wjService.createParameter(parameter), HttpStatus.CREATED);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/parameter-types/")
-    public ResponseEntity<Object> createParameterType(@Valid @RequestBody ParameterType parameterType) {
+    @PostMapping("/parameter-types/create")
+    public ResponseEntity<Object> createParameterType(@Valid @RequestBody ParameterTypeBody parameterType) {
         return new ResponseEntity<>(wjService.createParameterType(parameterType), HttpStatus.CREATED);
     }
 
-    @PostMapping("/users/")
-    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+    @PostMapping("/users/create")
+    public ResponseEntity<Object> createUser(@Valid @RequestBody UserBody user) {
         try {
             return new ResponseEntity<>(wjService.createUser(user), HttpStatus.CREATED);
         } catch (CustomException e) {
@@ -217,24 +233,36 @@ public class AppController {
         }
     }
 
-    @PostMapping("/user-workouts/")
-    public ResponseEntity<Object> createUserWorkout(@Valid @RequestBody UserWorkout userWorkout) {
-        return new ResponseEntity<>(wjService.createUserWorkout(userWorkout), HttpStatus.CREATED);
+    @PostMapping("/user-workouts/create")
+    public ResponseEntity<Object> createUserWorkout(@Valid @RequestBody UserWorkoutBody userWorkout) {
+        try {
+            return new ResponseEntity<>(wjService.createUserWorkout(userWorkout), HttpStatus.CREATED);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/user-workout-parameter-values/")
-    public ResponseEntity<Object> createUserWorkoutParameterValue(@Valid @RequestBody UserWorkoutParameterValue userWorkoutParameterValue) {
-        return new ResponseEntity<>(wjService.createUserWorkoutParameterValue(userWorkoutParameterValue), HttpStatus.CREATED);
+    @PostMapping("/user-workout-parameter-values/create")
+    public ResponseEntity<Object> createUserWorkoutParameterValue(@Valid @RequestBody UserWorkoutParameterValueBody userWorkoutParameterValue) {
+        try {
+            return new ResponseEntity<>(wjService.createUserWorkoutParameterValue(userWorkoutParameterValue), HttpStatus.CREATED);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @PostMapping("/workouts/")
-    public ResponseEntity<Object> createWorkout(@Valid @RequestBody Workout workout) {
+    @PostMapping("/workouts/create")
+    public ResponseEntity<Object> createWorkout(@Valid @RequestBody WorkoutBody workout) {
         return new ResponseEntity<>(wjService.createWorkout(workout), HttpStatus.CREATED);
     }
 
-    @PostMapping("/workout-exercises/")
-    public ResponseEntity<Object> createWorkoutExercise(@Valid @RequestBody WorkoutExercise workoutExercise) {
-        return new ResponseEntity<>(wjService.createWorkoutExercise(workoutExercise), HttpStatus.CREATED);
+    @PostMapping("/workout-exercises/create")
+    public ResponseEntity<Object> createWorkoutExercise(@Valid @RequestBody WorkoutExerciseBody workoutExercise) {
+        try {
+            return new ResponseEntity<>(wjService.createWorkoutExercise(workoutExercise), HttpStatus.CREATED);
+        } catch (CustomException e) {
+            return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/exercises/{id}")
@@ -445,6 +473,13 @@ public class AppController {
         } catch (CustomException e) {
             return new ResponseEntity<>(e.errorBody(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @InitBinder
+    private void dateBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
+        binder.registerCustomEditor(Date.class, editor);
     }
 
 }

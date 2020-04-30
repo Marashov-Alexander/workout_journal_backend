@@ -1,10 +1,12 @@
 package journal.workout.models.requests;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class ParameterBody {
 
     @NotNull
+    @NotEmpty
     private String name;
 
     @NotNull
