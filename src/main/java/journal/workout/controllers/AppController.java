@@ -233,6 +233,11 @@ public class AppController {
         }
     }
 
+    @GetMapping("/users/login")
+    public ResponseEntity<Object> login() {
+        return new ResponseEntity<>("Success!", HttpStatus.OK);
+    }
+
     @PostMapping("/user-workouts/create")
     public ResponseEntity<Object> createUserWorkout(@Valid @RequestBody UserWorkoutBody userWorkout) {
         try {
