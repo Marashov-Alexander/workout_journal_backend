@@ -3,6 +3,7 @@ package journal.workout.controllers;
 import journal.workout.exceptions.CustomException;
 import journal.workout.models.*;
 import journal.workout.models.requests.*;
+import journal.workout.models.responses.ErrorBody;
 import journal.workout.services.WJService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
@@ -235,7 +236,7 @@ public class AppController {
 
     @GetMapping("/users/login")
     public ResponseEntity<Object> login() {
-        return new ResponseEntity<>("Success!", HttpStatus.OK);
+        return new ResponseEntity<>(new ErrorBody("Success!"), HttpStatus.OK);
     }
 
     @PostMapping("/user-workouts/create")
