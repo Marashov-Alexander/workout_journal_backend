@@ -16,3 +16,13 @@ Go to this address and press "Show/hide" button:
 ```bash
 http://localhost:8080/swagger-ui.html
 ```
+
+#Server
+##Documentation address
+```bash
+http://178.79.189.130:8080/swagger-ui.html
+
+```
+##User
+test@test.test
+test
