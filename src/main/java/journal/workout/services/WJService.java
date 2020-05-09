@@ -3,6 +3,7 @@ package journal.workout.services;
 import journal.workout.exceptions.CustomException;
 import journal.workout.models.*;
 import journal.workout.models.requests.*;
+import journal.workout.models.responses.UserResponse;
 
 import java.util.List;
 
@@ -50,11 +51,13 @@ public interface WJService {
     MeasureUnit createMeasureUnit(MeasureUnitBody measureUnitBody);
     Parameter createParameter(ParameterBody parameterBody) throws CustomException;
     ParameterType createParameterType(ParameterTypeBody parameterTypeBody);
-    User createUser(UserBody userBody) throws CustomException;
+    UserResponse createUser(UserBody userBody) throws CustomException;
     UserWorkout createUserWorkout(UserWorkoutBody userWorkoutBody) throws CustomException;
     UserWorkoutParameterValue createUserWorkoutParameterValue(UserWorkoutParameterValueBody userWorkoutParameterValueBody) throws CustomException;
     Workout createWorkout(WorkoutBody workoutBody);
     WorkoutExercise createWorkoutExercise(WorkoutExerciseBody workoutExerciseBody) throws CustomException;
+
+    UserResponse login();
 
     Exercise updateExercise(ExerciseBody exercise, long id) throws CustomException;
     ExerciseParameter updateExerciseParameter(ExerciseParameterBody exerciseParameter, long id) throws CustomException;

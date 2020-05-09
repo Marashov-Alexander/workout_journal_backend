@@ -3,8 +3,10 @@ package journal.workout.services;
 import journal.workout.exceptions.CustomException;
 import journal.workout.models.*;
 import journal.workout.models.requests.*;
+import journal.workout.models.responses.UserResponse;
 import journal.workout.repositories.*;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -274,11 +276,11 @@ public class WJServiceImpl implements WJService {
     }
 
     @Override
-    public User createUser(UserBody userBody) throws CustomException {
+    public UserResponse createUser(UserBody userBody) throws CustomException {
         if (usersRepository.findByEmail(userBody.getEmail()) == null) {
             User user = new User();
             copyAndSave(user, userBody);
-            return user;
+            return new UserResponse(user);
         } else {
             throw new CustomException("User with email " + userBody.getEmail() + " is already exists");
         }
@@ -311,6 +313,13 @@ public class WJServiceImpl implements WJService {
         WorkoutExercise workoutExercise = new WorkoutExercise();
         copyAndSave(workoutExercise, workoutExerciseBody);
         return workoutExercise;
+    }
+
+    @Override
+    public UserResponse login() {
+        var userCr = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = usersRepository.findByEmail(userCr.getUsername());
+        return new UserResponse(user);
     }
 
     @Override

@@ -4,10 +4,12 @@ import journal.workout.exceptions.CustomException;
 import journal.workout.models.*;
 import journal.workout.models.requests.*;
 import journal.workout.models.responses.ErrorBody;
+import journal.workout.models.responses.UserResponse;
 import journal.workout.services.WJService;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -236,7 +238,7 @@ public class AppController {
 
     @GetMapping("/users/login")
     public ResponseEntity<Object> login() {
-        return new ResponseEntity<>(new ErrorBody("Success!"), HttpStatus.OK);
+        return new ResponseEntity<>(wjService.login(), HttpStatus.OK);
     }
 
     @PostMapping("/user-workouts/create")
