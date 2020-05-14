@@ -9,6 +9,7 @@ import java.util.Date;
 public class UserResponse {
 
     public UserResponse(User user) {
+        this.uid = user.getUid();
         this.first_name = user.getFirst_name();
         this.last_name = user.getLast_name();
         this.email = user.getEmail();
@@ -16,6 +17,10 @@ public class UserResponse {
         this.gender = user.getGender();
         this.avatarUrl = user.getAvatarUrl();
     }
+
+    @NotNull
+    @NotEmpty
+    private String uid;
 
     @NotNull
     @NotEmpty
@@ -79,5 +84,13 @@ public class UserResponse {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }
