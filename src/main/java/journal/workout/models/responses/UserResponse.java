@@ -9,6 +9,7 @@ import java.util.Date;
 public class UserResponse {
 
     public UserResponse(User user) {
+        this.id = user.getId();
         this.uid = user.getUid();
         this.first_name = user.getFirst_name();
         this.last_name = user.getLast_name();
@@ -17,6 +18,8 @@ public class UserResponse {
         this.gender = user.getGender();
         this.avatarUrl = user.getAvatarUrl();
     }
+
+    private Long id;
 
     @NotNull
     @NotEmpty
@@ -92,5 +95,13 @@ public class UserResponse {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
