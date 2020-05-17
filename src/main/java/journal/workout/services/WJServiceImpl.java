@@ -277,6 +277,9 @@ public class WJServiceImpl implements WJService {
 
     @Override
     public UserResponse createUser(UserBody userBody) throws CustomException {
+        if (userBody.getEmail() == null || userBody.getPassword() == null || userBody.getFirst_name() == null) {
+            throw new CustomException("User must have email, password and first name");
+        }
         if (usersRepository.findByEmail(userBody.getEmail()) == null) {
             User user = new User();
             copyAndSave(user, userBody);

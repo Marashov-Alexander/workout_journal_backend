@@ -273,7 +273,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/exercises/{id}")
+    @PatchMapping("/exercises/{id}")
     public ResponseEntity<Object> updateExercise(@Valid @RequestBody ExerciseBody exercise, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateExercise(exercise, id), HttpStatus.OK);
@@ -282,7 +282,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/exercise-parameters/{id}")
+    @PatchMapping("/exercise-parameters/{id}")
     public ResponseEntity<Object> updateExerciseParameter(@Valid @RequestBody ExerciseParameterBody exerciseParameter, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateExerciseParameter(exerciseParameter, id), HttpStatus.OK);
@@ -291,7 +291,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/exercise-types/{id}")
+    @PatchMapping("/exercise-types/{id}")
     public ResponseEntity<Object> updateExerciseType(@Valid @RequestBody ExerciseTypeBody exerciseType, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateExerciseType(exerciseType, id), HttpStatus.OK);
@@ -300,7 +300,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/measure-units/{id}")
+    @PatchMapping("/measure-units/{id}")
     
     public ResponseEntity<Object> updateMeasureUnit(@Valid @RequestBody MeasureUnitBody measureUnit, @PathVariable(name = "id") long id) {
         try {
@@ -310,7 +310,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/parameters/{id}")
+    @PatchMapping("/parameters/{id}")
     public ResponseEntity<Object> updateParameter(@Valid @RequestBody ParameterBody parameter, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateParameter(parameter, id), HttpStatus.OK);
@@ -319,7 +319,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/parameter-types/{id}")
+    @PatchMapping("/parameter-types/{id}")
     public ResponseEntity<Object> updateParameterType(@Valid @RequestBody ParameterTypeBody parameterType, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateParameterType(parameterType, id), HttpStatus.OK);
@@ -328,7 +328,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/users/{id}")
+    @PatchMapping("/users/{id}")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserBody user, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateUser(user, id), HttpStatus.OK);
@@ -337,7 +337,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/user-workouts/{id}")
+    @PatchMapping("/user-workouts/{id}")
     public ResponseEntity<Object> updateUserWorkout(@Valid @RequestBody UserWorkoutBody userWorkout, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateUserWorkout(userWorkout, id), HttpStatus.OK);
@@ -346,7 +346,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/user-workout-parameter-values/{id}")
+    @PatchMapping("/user-workout-parameter-values/{id}")
     public ResponseEntity<Object> updateUserWorkoutParameterValue(@Valid @RequestBody UserWorkoutParameterValueBody userWorkoutParameterValue, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateUserWorkoutParameterValue(userWorkoutParameterValue, id), HttpStatus.OK);
@@ -355,7 +355,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/workouts/{id}")
+    @PatchMapping("/workouts/{id}")
     public ResponseEntity<Object> updateWorkout(@Valid @RequestBody WorkoutBody workout, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateWorkout(workout, id), HttpStatus.OK);
@@ -364,7 +364,7 @@ public class AppController {
         }
     }
 
-    @PutMapping("/workout-exercises/{id}")
+    @PatchMapping("/workout-exercises/{id}")
     public ResponseEntity<Object> updateWorkoutExercise(@Valid @RequestBody WorkoutExerciseBody workoutExercise, @PathVariable(name = "id") long id) {
         try {
             return new ResponseEntity<>(wjService.updateWorkoutExercise(workoutExercise, id), HttpStatus.OK);
