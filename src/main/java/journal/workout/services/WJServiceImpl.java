@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -255,10 +256,14 @@ public class WJServiceImpl implements WJService {
     }
 
     @Override
-    public MeasureUnit createMeasureUnit(MeasureUnitBody measureUnitBody) {
-        MeasureUnit measureUnit = new MeasureUnit();
-        copyAndSave(measureUnit, measureUnitBody);
-        return measureUnit;
+    public List<Long> createMeasureUnits(List<MeasureUnitBody> measureUnitBody) {
+        List<Long> ids = new ArrayList<>(measureUnitBody.size());
+        for (int i = 0; i < measureUnitBody.size(); ++i) {
+            MeasureUnit measureUnit = new MeasureUnit();
+            copyAndSave(measureUnit, measureUnitBody.get(i));
+            ids.set(i, measureUnit.getId());
+        }
+        return ids;
     }
 
     @Override

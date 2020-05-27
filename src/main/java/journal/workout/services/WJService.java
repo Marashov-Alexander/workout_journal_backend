@@ -48,7 +48,7 @@ public interface WJService {
     Exercise createExercise(ExerciseBody exerciseBody) throws CustomException;
     ExerciseParameter createExerciseParameter(ExerciseParameterBody exerciseParameterBody) throws CustomException;
     ExerciseType createExerciseType(ExerciseTypeBody exerciseTypeBody);
-    MeasureUnit createMeasureUnit(MeasureUnitBody measureUnitBody);
+    List<Long> createMeasureUnits(List<MeasureUnitBody> measureUnitBody);
     Parameter createParameter(ParameterBody parameterBody) throws CustomException;
     ParameterType createParameterType(ParameterTypeBody parameterTypeBody);
     UserResponse createUser(UserBody userBody) throws CustomException;
