@@ -391,9 +391,6 @@ public class WJServiceImpl implements WJService {
     }
 
     private void copyAndSave(UserWorkout userWorkout, UserWorkoutBody userWorkoutBody) throws CustomException {
-        if (userWorkoutBody.getName() != null) {
-            userWorkout.setName(userWorkoutBody.getName());
-        }
 
         if (userWorkoutBody.getUser_id() != null) {
             Optional<User> optionalUser = usersRepository.findById(userWorkoutBody.getUser_id());
