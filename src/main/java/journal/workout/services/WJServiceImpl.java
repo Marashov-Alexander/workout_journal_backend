@@ -337,6 +337,10 @@ public class WJServiceImpl implements WJService {
         if (parameterBody.getResult_type() != null) {
             parameter.setResultType(parameterBody.getResult_type());
         }
+
+        if (parameterBody.getValue() != null) {
+            parameter.setValue(parameterBody.getValue());
+        }
         parametersRepository.save(parameter);
     }
 

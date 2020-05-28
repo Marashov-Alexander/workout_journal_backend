@@ -15,6 +15,9 @@ public class ParameterBody {
     @NotNull
     private Integer result_type;
 
+    @NotNull
+    private Float value;
+
     public String getName() {
         return name;
     }
@@ -37,5 +40,13 @@ public class ParameterBody {
 
     public void setResult_type(Integer result_type) {
         this.result_type = result_type;
+    }
+
+    public Float getValue() {
+        return value;
+    }
+
+    public void setValue(Float value) {
+        this.value = value;
     }
 }

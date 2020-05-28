@@ -20,6 +20,9 @@ public class Parameter {
     @JoinColumn(name = "result_type")
     private Integer resultType;
 
+    @JoinColumn(name = "value")
+    private Float value;
+
     public Long getId() {
         return id;
     }
@@ -50,5 +53,13 @@ public class Parameter {
 
     public void setResultType(Integer resultType) {
         this.resultType = resultType;
+    }
+
+    public Float getValue() {
+        return value;
+    }
+
+    public void setValue(Float value) {
+        this.value = value;
     }
 }
