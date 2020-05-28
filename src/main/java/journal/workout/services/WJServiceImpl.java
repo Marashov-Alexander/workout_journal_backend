@@ -259,6 +259,7 @@ public class WJServiceImpl implements WJService {
             Optional<Parameter> byId = parametersRepository.findById(body.getParameter_id());
             byId.ifPresent(entity::setParameter);
         }
+        parameterResultsRepository.save(entity);
     }
 
     @Override
