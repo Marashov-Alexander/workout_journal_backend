@@ -160,9 +160,15 @@ public class WJServiceImpl implements WJService {
     public List<Long> createExerciseType(List<ExerciseTypeBody> bodies) {
         List<Long> ids = new ArrayList<>();
         for (ExerciseTypeBody body : bodies) {
-            ExerciseType entity = new ExerciseType();
-            copyAndSave(entity, body);
-            ids.add(entity.getId());
+            if (exerciseTypesRepository.existsByName(body.getName())) {
+                ExerciseType byName = exerciseTypesRepository.findByName(body.getName());
+                ids.add(byName.getId());
+            } else {
+                ExerciseType entity = new ExerciseType();
+                entity.setName(body.getName());
+                exerciseTypesRepository.save(entity);
+                ids.add(entity.getId());
+            }
         }
         return ids;
     }
@@ -306,13 +312,6 @@ public class WJServiceImpl implements WJService {
             exerciseParameter.setParameter(optionalParameter.get());
         }
         exercisesParametersRepository.save(exerciseParameter);
-    }
-
-    private void copyAndSave(ExerciseType exerciseType, ExerciseTypeBody exerciseTypeBody) {
-        if (exerciseTypeBody.getName() != null) {
-            exerciseType.setName(exerciseTypeBody.getName());
-        }
-        exerciseTypesRepository.save(exerciseType);
     }
 
     @Override
