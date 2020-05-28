@@ -90,12 +90,9 @@ public class WJServiceImpl implements WJService {
 
     @Override
     public List<Exercise> readExercises() {
-        return exercisesRepository.getAllById(
-                readWorkoutExercises().stream()
-                        .map( workoutExercise ->
-                                workoutExercise.getExercise().getId())
-                        .collect(Collectors.toList())
-        );
+        return readWorkoutExercises().stream()
+                .map(WorkoutExercise::getExercise)
+                .collect(Collectors.toList());
     }
 
     @Override

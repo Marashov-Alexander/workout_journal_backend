@@ -9,7 +9,5 @@ import java.util.Optional;
 
 public interface WorkoutExercisesRepository extends CrudRepository<WorkoutExercise, Long> {
     List<WorkoutExercise> findAll();
-
-    Optional<List<WorkoutExercise>> findAllByWorkout(Workout workout);
     List<WorkoutExercise> getAllByWorkout(Workout workout);
 }
