@@ -13,8 +13,11 @@ public class Workout {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
-    private String description;
+    @Column(name = "planned_time")
+    private String planned_time;
+
+    @Column(name = "weekdays_mask")
+    private Integer weekdays_mask;
 
     public Long getId() {
         return id;
@@ -32,11 +35,19 @@ public class Workout {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPlanned_time() {
+        return planned_time;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPlanned_time(String planned_time) {
+        this.planned_time = planned_time;
+    }
+
+    public Integer getWeekdays_mask() {
+        return weekdays_mask;
+    }
+
+    public void setWeekdays_mask(Integer weekdays_mask) {
+        this.weekdays_mask = weekdays_mask;
     }
 }

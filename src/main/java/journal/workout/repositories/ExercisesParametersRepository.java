@@ -11,4 +11,5 @@ public interface ExercisesParametersRepository extends CrudRepository<ExercisePa
         List<ExerciseParameter> findAll();
 
         Optional<List<ExerciseParameter>> findAllByExercise(Exercise exercise);
+        List<ExerciseParameter> getAllByExercise(Exercise exercise);
 }

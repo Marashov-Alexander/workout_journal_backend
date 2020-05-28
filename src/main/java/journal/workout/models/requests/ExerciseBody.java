@@ -9,9 +9,7 @@ public class ExerciseBody {
     @NotEmpty
     private String name;
     @NotNull
-    private String description;
-    @NotNull
-    private Long exerciseTypeId;
+    private Long exercise_type_id;
 
     public String getName() {
         return name;
@@ -21,19 +19,11 @@ public class ExerciseBody {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public Long getExercise_type_id() {
+        return exercise_type_id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getExerciseTypeId() {
-        return exerciseTypeId;
-    }
-
-    public void setExerciseTypeId(Long exerciseTypeId) {
-        this.exerciseTypeId = exerciseTypeId;
+    public void setExercise_type_id(Long exercise_type_id) {
+        this.exercise_type_id = exercise_type_id;
     }
 }

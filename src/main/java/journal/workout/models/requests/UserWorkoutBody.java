@@ -9,13 +9,11 @@ public class UserWorkoutBody {
     @NotEmpty
     private String name;
 
-    private String comments;
+    @NotNull
+    private Long user_id;
 
     @NotNull
-    private Long userId;
-
-    @NotNull
-    private Long workoutId;
+    private Long workout_id;
 
     public String getName() {
         return name;
@@ -25,27 +23,19 @@ public class UserWorkoutBody {
         this.name = name;
     }
 
-    public String getComments() {
-        return comments;
+    public Long getUser_id() {
+        return user_id;
     }
 
-    public void setComments(String comments) {
-        this.comments = comments;
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getWorkout_id() {
+        return workout_id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getWorkoutId() {
-        return workoutId;
-    }
-
-    public void setWorkoutId(Long workoutId) {
-        this.workoutId = workoutId;
+    public void setWorkout_id(Long workout_id) {
+        this.workout_id = workout_id;
     }
 }

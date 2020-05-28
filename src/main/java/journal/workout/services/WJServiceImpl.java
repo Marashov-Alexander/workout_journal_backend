@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WJServiceImpl implements WJService {
@@ -20,89 +21,81 @@ public class WJServiceImpl implements WJService {
     static ExercisesParametersRepository exercisesParametersRepository;
     static ExercisesRepository exercisesRepository;
     static ExerciseTypesRepository exerciseTypesRepository;
-    static MeasureUnitsRepository measureUnitsRepository;
     static ParametersRepository parametersRepository;
-    static ParameterTypesRepository parameterTypesRepository;
+    static ParameterResultsRepository parameterResultsRepository;
     static UsersRepository usersRepository;
-    static UserWorkoutParameterValuesRepository userWorkoutParameterValuesRepository;
+    static DoneExerciseRepository userWorkoutParameterValuesRepository;
     static UserWorkoutsRepository userWorkoutsRepository;
     static WorkoutExercisesRepository workoutExercisesRepository;
     static WorkoutsRepository workoutsRepository;
+    static DoneExerciseRepository doneExerciseRepository;
 
     public WJServiceImpl(ExercisesParametersRepository exercisesParametersRepository,
                          ExercisesRepository exercisesRepository,
                          ExerciseTypesRepository exerciseTypesRepository,
-                         MeasureUnitsRepository measureUnitsRepository,
                          ParametersRepository parametersRepository,
-                         ParameterTypesRepository parameterTypesRepository,
+                         ParameterResultsRepository parameterResultsRepository,
                          UsersRepository usersRepository,
-                         UserWorkoutParameterValuesRepository userWorkoutParameterValuesRepository,
+                         DoneExerciseRepository userWorkoutParameterValuesRepository,
                          UserWorkoutsRepository userWorkoutsRepository,
                          WorkoutExercisesRepository workoutExercisesRepository,
-                         WorkoutsRepository workoutsRepository) {
+                         WorkoutsRepository workoutsRepository,
+                         DoneExerciseRepository doneExerciseRepository) {
         WJServiceImpl.exercisesParametersRepository = exercisesParametersRepository;
         WJServiceImpl.exercisesRepository = exercisesRepository;
         WJServiceImpl.exerciseTypesRepository = exerciseTypesRepository;
-        WJServiceImpl.measureUnitsRepository = measureUnitsRepository;
         WJServiceImpl.parametersRepository = parametersRepository;
-        WJServiceImpl.parameterTypesRepository = parameterTypesRepository;
+        WJServiceImpl.parameterResultsRepository = parameterResultsRepository;
         WJServiceImpl.usersRepository = usersRepository;
         WJServiceImpl.userWorkoutParameterValuesRepository = userWorkoutParameterValuesRepository;
         WJServiceImpl.userWorkoutsRepository = userWorkoutsRepository;
         WJServiceImpl.workoutExercisesRepository = workoutExercisesRepository;
         WJServiceImpl.workoutsRepository = workoutsRepository;
+        WJServiceImpl.doneExerciseRepository = doneExerciseRepository;
+    }
+
+    private User getUser() {
+        var userCr = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return usersRepository.findByEmail(userCr.getUsername());
     }
 
     @Override
     public List<Workout> readWorkouts() {
-        return workoutsRepository.findAll();
+        List<UserWorkout> userWorkouts = userWorkoutsRepository.getAllByUser(getUser());
+        return userWorkouts.stream().map(UserWorkout::getWorkout).collect(Collectors.toList());
     }
 
     @Override
-    public Workout readWorkout(Long id) throws CustomException {
-        Optional<Workout> workout = workoutsRepository.findById(id);
-        if (workout.isEmpty()) {
-            throw new CustomException("No such workout");
-        } else {
-            return workout.get();
+    public List<WorkoutExercise> readWorkoutExercises() {
+        List<Workout> workouts = readWorkouts();
+        List<WorkoutExercise> workoutExercises = new ArrayList<>();
+        workouts.forEach( workout -> workoutExercises.addAll(workoutExercisesRepository.getAllByWorkout(workout)));
+        return workoutExercises;
+    }
+
+    @Override
+    public List<DoneExercise> readDoneExercises() {
+        return doneExerciseRepository.findAllByUser(getUser());
+    }
+
+    @Override
+    public List<ParameterResult> readParameterResults() {
+        List<DoneExercise> doneExercises = readDoneExercises();
+        List<ParameterResult> parameterResults = new ArrayList<>();
+        for (DoneExercise doneExercise : doneExercises) {
+            parameterResults.addAll(parameterResultsRepository.findAllByDoneExercise(doneExercise));
         }
+        return parameterResults;
     }
 
     @Override
     public List<Exercise> readExercises() {
-        return exercisesRepository.findAll();
-    }
-
-    @Override
-    public List<Exercise> readExercisesByType(Long exerciseTypeId) throws CustomException {
-        Optional<ExerciseType> exerciseTypeOptional = exerciseTypesRepository.findById(exerciseTypeId);
-        if (exerciseTypeOptional.isEmpty()) {
-            throw new CustomException("No such exercise type");
-        } else {
-            return exercisesRepository.findAllByExerciseType(exerciseTypeOptional.get()).orElse(null);
-        }
-    }
-
-    @Override
-    public List<WorkoutExercise> readExercisesByWorkout(Long workoutId) throws CustomException {
-
-        Optional<Workout> workoutOptional = workoutsRepository.findById(workoutId);
-        if (workoutOptional.isEmpty()) {
-            throw new CustomException("No such workout");
-        } else {
-            return workoutExercisesRepository.findAllByWorkout(workoutOptional.get()).orElse(null);
-        }
-    }
-
-    @Override
-    public Exercise readExercise(Long id) throws CustomException {
-
-        Optional<Exercise> result = exercisesRepository.findById(id);
-        if (result.isEmpty()) {
-            throw new CustomException("No such exercise");
-        } else {
-            return result.get();
-        }
+        return exercisesRepository.getAllById(
+                readWorkoutExercises().stream()
+                        .map( workoutExercise ->
+                                workoutExercise.getExercise().getId())
+                        .collect(Collectors.toList())
+        );
     }
 
     @Override
@@ -111,75 +104,18 @@ public class WJServiceImpl implements WJService {
     }
 
     @Override
-    public ExerciseType readExerciseType(Long id) throws CustomException {
-
-        Optional<ExerciseType> result = exerciseTypesRepository.findById(id);
-        if (result.isEmpty()) {
-            throw new CustomException("No such exercise type");
-        } else {
-            return result.get();
+    public List<ExerciseParameter> readExerciseParameters() {
+        List<Exercise> exercises = readExercises();
+        List<ExerciseParameter> exerciseParameters = new ArrayList<>();
+        for (Exercise exercise : exercises) {
+            exerciseParameters.addAll(exercisesParametersRepository.getAllByExercise(exercise));
         }
+        return exerciseParameters;
     }
 
     @Override
     public List<Parameter> readParameters() {
-        return parametersRepository.findAll();
-    }
-
-    @Override
-    public List<ExerciseParameter> readParametersByExercise(Long exerciseId) throws CustomException {
-
-        Optional<Exercise> exerciseOptional = exercisesRepository.findById(exerciseId);
-        if (exerciseOptional.isEmpty()) {
-            throw new CustomException("No such exercise");
-        } else {
-            return exercisesParametersRepository.findAllByExercise(exerciseOptional.get()).orElse(null);
-        }
-    }
-
-    @Override
-    public Parameter readParameter(Long id) throws CustomException {
-        Optional<Parameter> result = parametersRepository.findById(id);
-        if (result.isEmpty()) {
-            throw new CustomException("No such parameter");
-        } else {
-            return result.get();
-        }
-    }
-
-    @Override
-    public List<ParameterType> readParameterTypes() {
-        return parameterTypesRepository.findAll();
-    }
-
-    @Override
-    public ParameterType readParameterType(Long id) throws CustomException {
-        Optional<ParameterType> result = parameterTypesRepository.findById(id);
-        if (result.isEmpty()) {
-            throw new CustomException("No such parameter type");
-        } else {
-            return result.get();
-        }
-    }
-
-    @Override
-    public List<MeasureUnit> readMeasureUnits() {
-        return measureUnitsRepository.findAll();
-    }
-
-    @Override
-    public MeasureUnit readMeasureUnit(Long id) throws CustomException {
-        Optional<MeasureUnit> result = measureUnitsRepository.findById(id);
-        if (result.isEmpty()) {
-            throw new CustomException("No such measure unit");
-        } else {
-            return result.get();
-        }
-    }
-
-    @Override
-    public List<User> readUsers() {
-        return usersRepository.findAll();
+        return readExerciseParameters().stream().map(ExerciseParameter::getParameter).collect(Collectors.toList());
     }
 
     @Override
@@ -187,97 +123,95 @@ public class WJServiceImpl implements WJService {
         Optional<User> result = usersRepository.findById(id);
         if (result.isEmpty()) {
             throw new CustomException("No such user");
-        } else {
-            return result.get();
         }
+        if (!getUser().getId().equals(result.get().getId())) {
+            throw new CustomException("Access to this user is denied");
+        }
+        return result.get();
     }
 
     @Override
     public List<UserWorkout> readUserWorkouts() {
-        return userWorkoutsRepository.findAll();
+        return userWorkoutsRepository.getAllByUser(getUser());
     }
 
-    @Override
-    public UserWorkout readUserWorkout(Long id) throws CustomException {
-        Optional<UserWorkout> result = userWorkoutsRepository.findById(id);
-        if (result.isEmpty()) {
-            throw new CustomException("No such user workout");
-        } else {
-            return result.get();
-        }
-    }
+
 
     @Override
-    public List<UserWorkoutParameterValue> readUserWorkoutParameterValues(Long userWorkoutId) throws CustomException {
-        Optional<UserWorkout> userWorkoutOptional = userWorkoutsRepository.findById(userWorkoutId);
-        if (userWorkoutOptional.isEmpty()) {
-            throw new CustomException("No such user workout");
-        } else {
-            return userWorkoutParameterValuesRepository.findAllByUserWorkout(userWorkoutOptional.get()).orElse(null);
-        }
-    }
-
-    @Override
-    public Long readUserWorkoutParameterValue(Long userWorkoutId, Long parameterId) throws CustomException {
-        Optional<UserWorkout> optionalUserWorkout = userWorkoutsRepository.findById(userWorkoutId);
-        Optional<Parameter> optionalParameter = parametersRepository.findById(parameterId);
-        if (optionalParameter.isEmpty()) {
-            throw new CustomException("No such parameter");
-        }
-        if (optionalUserWorkout.isEmpty()) {
-            throw new CustomException("No such user workout");
-        }
-        Optional<Long> optionalValue = userWorkoutParameterValuesRepository.findValueByUserWorkoutAndParameter(optionalUserWorkout.get(), optionalParameter.get());
-        if (optionalValue.isEmpty()) {
-            throw new CustomException("No such optional value");
-        }
-        return optionalValue.get();
-    }
-
-    @Override
-    public Exercise createExercise(ExerciseBody exerciseBody) throws CustomException {
-        Exercise exercise = new Exercise();
-        copyAndSave(exercise, exerciseBody);
-        return exercise;
-    }
-
-    @Override
-    public ExerciseParameter createExerciseParameter(ExerciseParameterBody exerciseParameterBody) throws CustomException {
-        ExerciseParameter exerciseParameter = new ExerciseParameter();
-        copyAndSave(exerciseParameter, exerciseParameterBody);
-        return exerciseParameter;
-    }
-
-    @Override
-    public ExerciseType createExerciseType(ExerciseTypeBody exerciseTypeBody) {
-        ExerciseType exerciseType = new ExerciseType();
-        copyAndSave(exerciseType, exerciseTypeBody);
-        return exerciseType;
-    }
-
-    @Override
-    public List<Long> createMeasureUnits(List<MeasureUnitBody> measureUnitBody) {
-        List<Long> ids = new ArrayList<>(measureUnitBody.size());
-        for (int i = 0; i < measureUnitBody.size(); ++i) {
-            MeasureUnit measureUnit = new MeasureUnit();
-            copyAndSave(measureUnit, measureUnitBody.get(i));
-            ids.set(i, measureUnit.getId());
+    public List<Long> createExercise(List<ExerciseBody> exerciseBody) throws CustomException {
+        List<Long> ids = new ArrayList<>();
+        for (ExerciseBody body : exerciseBody) {
+            Exercise exercise = new Exercise();
+            copyAndSave(exercise, body);
+            ids.add(exercise.getId());
         }
         return ids;
     }
 
     @Override
-    public Parameter createParameter(ParameterBody parameterBody) throws CustomException {
-        Parameter parameter = new Parameter();
-        copyAndSave(parameter, parameterBody);
-        return parameter;
+    public List<Long> createExerciseParameter(List<ExerciseParameterBody> bodies) throws CustomException {
+        List<Long> ids = new ArrayList<>();
+        for (ExerciseParameterBody body : bodies) {
+            ExerciseParameter entity = new ExerciseParameter();
+            copyAndSave(entity, body);
+            ids.add(entity.getId());
+        }
+        return ids;
     }
 
     @Override
-    public ParameterType createParameterType(ParameterTypeBody parameterTypeBody) {
-        ParameterType parameterType = new ParameterType();
-        copyAndSave(parameterType, parameterTypeBody);
-        return parameterType;
+    public List<Long> createExerciseType(List<ExerciseTypeBody> bodies) {
+        List<Long> ids = new ArrayList<>();
+        for (ExerciseTypeBody body : bodies) {
+            ExerciseType entity = new ExerciseType();
+            copyAndSave(entity, body);
+            ids.add(entity.getId());
+        }
+        return ids;
+    }
+
+    @Override
+    public List<Long> createParameter(List<ParameterBody> bodies) {
+        List<Long> ids = new ArrayList<>();
+        for (ParameterBody body : bodies) {
+            Parameter entity = new Parameter();
+            copyAndSave(entity, body);
+            ids.add(entity.getId());
+        }
+        return ids;
+    }
+
+    @Override
+    public List<Long> createUserWorkout(List<UserWorkoutBody> bodies) throws CustomException {
+        List<Long> ids = new ArrayList<>();
+        for (UserWorkoutBody body : bodies) {
+            UserWorkout entity = new UserWorkout();
+            copyAndSave(entity, body);
+            ids.add(entity.getId());
+        }
+        return ids;
+    }
+
+    @Override
+    public List<Long> createWorkout(List<WorkoutBody> bodies) {
+        List<Long> ids = new ArrayList<>();
+        for (WorkoutBody body : bodies) {
+            Workout entity = new Workout();
+            copyAndSave(entity, body);
+            ids.add(entity.getId());
+        }
+        return ids;
+    }
+
+    @Override
+    public List<Long> createWorkoutExercise(List<WorkoutExerciseBody> bodies) throws CustomException {
+        List<Long> ids = new ArrayList<>();
+        for (WorkoutExerciseBody body : bodies) {
+            WorkoutExercise entity = new WorkoutExercise();
+            copyAndSave(entity, body);
+            ids.add(entity.getId());
+        }
+        return ids;
     }
 
     @Override
@@ -295,39 +229,41 @@ public class WJServiceImpl implements WJService {
     }
 
     @Override
-    public UserWorkout createUserWorkout(UserWorkoutBody userWorkoutBody) throws CustomException {
-
-        UserWorkout userWorkout = new UserWorkout();
-        copyAndSave(userWorkout, userWorkoutBody);
-        return userWorkout;
+    public List<Long> createDoneExercise(List<DoneExerciseBody> bodies) throws CustomException {
+        List<Long> ids = new ArrayList<>();
+        for (DoneExerciseBody body : bodies) {
+            DoneExercise entity = new DoneExercise();
+            copyAndSave(entity, body);
+            ids.add(entity.getId());
+        }
+        return ids;
     }
 
     @Override
-    public UserWorkoutParameterValue createUserWorkoutParameterValue(UserWorkoutParameterValueBody userWorkoutParameterValueBody) throws CustomException {
-        UserWorkoutParameterValue userWorkoutParameterValue = new UserWorkoutParameterValue();
-        copyAndSave(userWorkoutParameterValue, userWorkoutParameterValueBody);
-        return userWorkoutParameterValue;
+    public List<Long> createParameterResult(List<ParameterResultBody> bodies) {
+        List<Long> ids = new ArrayList<>();
+        for (ParameterResultBody body : bodies) {
+            ParameterResult entity = new ParameterResult();
+            copyAndSave(entity, body);
+            ids.add(entity.getId());
+        }
+        return ids;
     }
 
-    @Override
-    public Workout createWorkout(WorkoutBody workoutBody) {
-        Workout workout = new Workout();
-        copyAndSave(workout, workoutBody);
-        return workout;
-    }
-
-    @Override
-    public WorkoutExercise createWorkoutExercise(WorkoutExerciseBody workoutExerciseBody) throws CustomException {
-        WorkoutExercise workoutExercise = new WorkoutExercise();
-        copyAndSave(workoutExercise, workoutExerciseBody);
-        return workoutExercise;
+    private void copyAndSave(ParameterResult entity, ParameterResultBody body) {
+        if (body.getDone_exercise_id() != null) {
+            Optional<DoneExercise> byId = doneExerciseRepository.findById(body.getDone_exercise_id());
+            byId.ifPresent(entity::setDoneExercise);
+        }
+        if (body.getParameter_id() != null) {
+            Optional<Parameter> byId = parametersRepository.findById(body.getParameter_id());
+            byId.ifPresent(entity::setParameter);
+        }
     }
 
     @Override
     public UserResponse login() {
-        var userCr = (org.springframework.security.core.userdetails.User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = usersRepository.findByEmail(userCr.getUsername());
-        return new UserResponse(user);
+        return new UserResponse(getUser());
     }
 
     @Override
@@ -342,16 +278,12 @@ public class WJServiceImpl implements WJService {
     }
 
     private void copyAndSave(Exercise exercise, ExerciseBody exerciseBody) throws CustomException {
-        if (exerciseBody.getExerciseTypeId() != null) {
-            Optional<ExerciseType> optionalExerciseType = exerciseTypesRepository.findById(exerciseBody.getExerciseTypeId());
+        if (exerciseBody.getExercise_type_id() != null) {
+            Optional<ExerciseType> optionalExerciseType = exerciseTypesRepository.findById(exerciseBody.getExercise_type_id());
             if (optionalExerciseType.isEmpty()) {
                 throw new CustomException("No such exercise type");
             }
             exercise.setExerciseType(optionalExerciseType.get());
-        }
-
-        if (exerciseBody.getDescription() != null) {
-            exercise.setDescription(exerciseBody.getDescription());
         }
 
         if (exerciseBody.getName() != null) {
@@ -360,28 +292,17 @@ public class WJServiceImpl implements WJService {
         exercisesRepository.save(exercise);
     }
 
-    @Override
-    public ExerciseParameter updateExerciseParameter(ExerciseParameterBody exerciseParameterBody, long id) throws CustomException {
-        Optional<ExerciseParameter> optionalExerciseParameter = exercisesParametersRepository.findById(id);
-        if (optionalExerciseParameter.isEmpty()) {
-            throw new CustomException("No such exercise parameter");
-        }
-        ExerciseParameter exerciseParameter = optionalExerciseParameter.get();
-        copyAndSave(exerciseParameter, exerciseParameterBody);
-        return exerciseParameter;
-    }
-
     private void copyAndSave(ExerciseParameter exerciseParameter, ExerciseParameterBody exerciseParameterBody) throws CustomException {
-        if (exerciseParameterBody.getExerciseId() != null) {
-            Optional<Exercise> optionalExercise = exercisesRepository.findById(exerciseParameterBody.getExerciseId());
+        if (exerciseParameterBody.getExercise_id() != null) {
+            Optional<Exercise> optionalExercise = exercisesRepository.findById(exerciseParameterBody.getExercise_id());
             if (optionalExercise.isEmpty()) {
                 throw new CustomException("No such exercise");
             }
             exerciseParameter.setExercise(optionalExercise.get());
         }
 
-        if (exerciseParameterBody.getParameterId() != null) {
-            Optional<Parameter> optionalParameter = parametersRepository.findById(exerciseParameterBody.getParameterId());
+        if (exerciseParameterBody.getParameter_id() != null) {
+            Optional<Parameter> optionalParameter = parametersRepository.findById(exerciseParameterBody.getParameter_id());
             if (optionalParameter.isEmpty()) {
                 throw new CustomException("No such parameter");
             }
@@ -390,44 +311,11 @@ public class WJServiceImpl implements WJService {
         exercisesParametersRepository.save(exerciseParameter);
     }
 
-    @Override
-    public ExerciseType updateExerciseType(ExerciseTypeBody exerciseTypeBody, long id) throws CustomException {
-        Optional<ExerciseType> optionalExerciseType = exerciseTypesRepository.findById(id);
-        if (optionalExerciseType.isEmpty()) {
-            throw new CustomException("No such exercise type");
-        }
-        ExerciseType exerciseType = optionalExerciseType.get();
-        copyAndSave(exerciseType, exerciseTypeBody);
-        return exerciseType;
-    }
-
     private void copyAndSave(ExerciseType exerciseType, ExerciseTypeBody exerciseTypeBody) {
         if (exerciseTypeBody.getName() != null) {
             exerciseType.setName(exerciseTypeBody.getName());
         }
         exerciseTypesRepository.save(exerciseType);
-    }
-
-    @Override
-    public MeasureUnit updateMeasureUnit(MeasureUnitBody measureUnitBody, long id) throws CustomException {
-        Optional<MeasureUnit> optionalMeasureUnit = measureUnitsRepository.findById(id);
-        if (optionalMeasureUnit.isEmpty()) {
-            throw new CustomException("No such measure unit");
-        }
-        MeasureUnit measureUnit = optionalMeasureUnit.get();
-        copyAndSave(measureUnit, measureUnitBody);
-        return measureUnit;
-    }
-
-    private void copyAndSave(MeasureUnit measureUnit, MeasureUnitBody measureUnitBody) {
-        if (measureUnitBody.getName() != null) {
-            measureUnit.setName(measureUnitBody.getName());
-        }
-
-        if (measureUnitBody.getAcronym() != null) {
-            measureUnit.setAcronym(measureUnitBody.getAcronym());
-        }
-        measureUnitsRepository.save(measureUnit);
     }
 
     @Override
@@ -441,45 +329,19 @@ public class WJServiceImpl implements WJService {
         return parameter;
     }
 
-    private void copyAndSave(Parameter parameter, ParameterBody parameterBody) throws CustomException {
+    private void copyAndSave(Parameter parameter, ParameterBody parameterBody) {
         if (parameterBody.getName() != null) {
             parameter.setName(parameterBody.getName());
         }
 
-        if (parameterBody.getMeasureUnitId() != null) {
-            Optional<MeasureUnit> optionalMeasureUnit = measureUnitsRepository.findById(parameterBody.getMeasureUnitId());
-            if (optionalMeasureUnit.isEmpty()) {
-                throw new CustomException("No such measure unit");
-            }
-            parameter.setMeasureUnit(optionalMeasureUnit.get());
+        if (parameterBody.getMeasure_unit() != null) {
+            parameter.setMeasureUnit(parameterBody.getMeasure_unit());
         }
 
-        if (parameterBody.getParameterTypeId() != null) {
-            Optional<ParameterType> optionalParameterType = parameterTypesRepository.findById(parameterBody.getParameterTypeId());
-            if (optionalParameterType.isEmpty()) {
-                throw new CustomException("No such parameter type");
-            }
-            parameter.setParameterType(optionalParameterType.get());
+        if (parameterBody.getResult_type() != null) {
+            parameter.setResultType(parameterBody.getResult_type());
         }
         parametersRepository.save(parameter);
-    }
-
-    @Override
-    public ParameterType updateParameterType(ParameterTypeBody parameterTypeBody, long id) throws CustomException {
-        Optional<ParameterType> optionalParameterType = parameterTypesRepository.findById(id);
-        if (optionalParameterType.isEmpty()) {
-            throw new CustomException("No such parameter type");
-        }
-        ParameterType parameterType = optionalParameterType.get();
-        copyAndSave(parameterType, parameterTypeBody);
-        return parameterType;
-    }
-
-    private void copyAndSave(ParameterType parameterType, ParameterTypeBody parameterTypeBody) {
-        if (parameterTypeBody.getName() != null) {
-            parameterType.setName(parameterTypeBody.getName());
-        }
-        parameterTypesRepository.save(parameterType);
     }
 
     @Override
@@ -528,35 +390,21 @@ public class WJServiceImpl implements WJService {
         usersRepository.save(user);
     }
 
-    @Override
-    public UserWorkout updateUserWorkout(UserWorkoutBody userWorkoutBody, long id) throws CustomException {
-        Optional<UserWorkout> optionalUserWorkout = userWorkoutsRepository.findById(id);
-        if (optionalUserWorkout.isEmpty()) {
-            throw new CustomException("No such user workout");
-        }
-        UserWorkout userWorkout = optionalUserWorkout.get();
-        copyAndSave(userWorkout, userWorkoutBody);
-        return userWorkout;
-    }
-
     private void copyAndSave(UserWorkout userWorkout, UserWorkoutBody userWorkoutBody) throws CustomException {
-        if (userWorkoutBody.getComments() != null) {
-            userWorkout.setComments(userWorkoutBody.getComments());
-        }
         if (userWorkoutBody.getName() != null) {
             userWorkout.setName(userWorkoutBody.getName());
         }
 
-        if (userWorkoutBody.getUserId() != null) {
-            Optional<User> optionalUser = usersRepository.findById(userWorkoutBody.getUserId());
+        if (userWorkoutBody.getUser_id() != null) {
+            Optional<User> optionalUser = usersRepository.findById(userWorkoutBody.getUser_id());
             if (optionalUser.isEmpty()) {
                 throw new CustomException("No such user");
             }
             userWorkout.setUser(optionalUser.get());
         }
 
-        if (userWorkoutBody.getWorkoutId() != null) {
-            Optional<Workout> optionalWorkout = workoutsRepository.findById(userWorkoutBody.getWorkoutId());
+        if (userWorkoutBody.getWorkout_id() != null) {
+            Optional<Workout> optionalWorkout = workoutsRepository.findById(userWorkoutBody.getWorkout_id());
             if (optionalWorkout.isEmpty()) {
                 throw new CustomException("No such optional workout");
             }
@@ -565,38 +413,27 @@ public class WJServiceImpl implements WJService {
         userWorkoutsRepository.save(userWorkout);
     }
 
-    @Override
-    public UserWorkoutParameterValue updateUserWorkoutParameterValue(UserWorkoutParameterValueBody userWorkoutParameterValueBody, long id) throws CustomException {
-        Optional<UserWorkoutParameterValue> optionalUserWorkoutParameterValue = userWorkoutParameterValuesRepository.findById(id);
-        if (optionalUserWorkoutParameterValue.isEmpty()) {
-            throw new CustomException("No such user workout parameter value");
-        }
-        UserWorkoutParameterValue userWorkoutParameterValue = optionalUserWorkoutParameterValue.get();
-        copyAndSave(userWorkoutParameterValue, userWorkoutParameterValueBody);
-        return userWorkoutParameterValue;
-    }
-
-    private void copyAndSave(UserWorkoutParameterValue userWorkoutParameterValue, UserWorkoutParameterValueBody userWorkoutParameterValueBody) throws CustomException {
-        if (userWorkoutParameterValueBody.getParameterId() != null) {
-            Optional<Parameter> optionalParameter = parametersRepository.findById(userWorkoutParameterValueBody.getParameterId());
+    private void copyAndSave(DoneExercise doneExercise, DoneExerciseBody doneExerciseBody) throws CustomException {
+        if (doneExerciseBody.getUser_id() != null) {
+            Optional<User> optionalParameter = usersRepository.findById(doneExerciseBody.getUser_id());
             if (optionalParameter.isEmpty()) {
-                throw new CustomException("No such parameter");
+                throw new CustomException("No such user");
             }
-            userWorkoutParameterValue.setParameter(optionalParameter.get());
+            doneExercise.setUser(optionalParameter.get());
         }
 
-        if (userWorkoutParameterValueBody.getUserWorkoutId() != null) {
-            Optional<UserWorkout> optionalUserWorkout = userWorkoutsRepository.findById(userWorkoutParameterValueBody.getUserWorkoutId());
-            if (optionalUserWorkout.isEmpty()) {
-                throw new CustomException("No such user workout");
+        if (doneExerciseBody.getExercise_id() != null) {
+            Optional<Exercise> optional = exercisesRepository.findById(doneExerciseBody.getExercise_id());
+            if (optional.isEmpty()) {
+                throw new CustomException("No such exercise");
             }
-            userWorkoutParameterValue.setUserWorkout(optionalUserWorkout.get());
+            doneExercise.setExercise(optional.get());
         }
 
-        if (userWorkoutParameterValueBody.getValue() != null) {
-            userWorkoutParameterValue.setValue(userWorkoutParameterValueBody.getValue());
+        if (doneExerciseBody.getDate() != null) {
+            doneExercise.setDate(doneExerciseBody.getDate());
         }
-        userWorkoutParameterValuesRepository.save(userWorkoutParameterValue);
+        userWorkoutParameterValuesRepository.save(doneExercise);
     }
 
     @Override
@@ -611,37 +448,29 @@ public class WJServiceImpl implements WJService {
     }
 
     private void copyAndSave(Workout workout, WorkoutBody workoutBody) {
-        if (workoutBody.getDescription() != null) {
-            workout.setDescription(workoutBody.getDescription());
-        }
         if (workoutBody.getName() != null) {
             workout.setName(workoutBody.getName());
+        }
+        if (workoutBody.getPlanned_time() != null) {
+            workout.setPlanned_time(workoutBody.getPlanned_time());
+        }
+        if (workoutBody.getWeekdays_mask() != null) {
+            workout.setWeekdays_mask(workoutBody.getWeekdays_mask());
         }
         workoutsRepository.save(workout);
     }
 
-    @Override
-    public WorkoutExercise updateWorkoutExercise(WorkoutExerciseBody workoutExerciseBody, long id) throws CustomException {
-        Optional<WorkoutExercise> optionalWorkoutExercise = workoutExercisesRepository.findById(id);
-        if (optionalWorkoutExercise.isEmpty()) {
-            throw new CustomException("No such workout exercise");
-        }
-        WorkoutExercise workoutExercise = optionalWorkoutExercise.get();
-        copyAndSave(workoutExercise, workoutExerciseBody);
-        return workoutExercise;
-    }
-
     private void copyAndSave(WorkoutExercise workoutExercise, WorkoutExerciseBody workoutExerciseBody) throws CustomException {
-        if (workoutExerciseBody.getExerciseId() != null) {
-            Optional<Exercise> optionalExercise = exercisesRepository.findById(workoutExerciseBody.getExerciseId());
+        if (workoutExerciseBody.getExercise_id() != null) {
+            Optional<Exercise> optionalExercise = exercisesRepository.findById(workoutExerciseBody.getExercise_id());
             if (optionalExercise.isEmpty()) {
                 throw new CustomException("No such exercise");
             }
             workoutExercise.setExercise(optionalExercise.get());
         }
 
-        if (workoutExerciseBody.getWorkoutId() != null) {
-            Optional<Workout> optionalWorkout = workoutsRepository.findById(workoutExerciseBody.getWorkoutId());
+        if (workoutExerciseBody.getWorkout_id() != null) {
+            Optional<Workout> optionalWorkout = workoutsRepository.findById(workoutExerciseBody.getWorkout_id());
             if (optionalWorkout.isEmpty()) {
                 throw new CustomException("No such workout");
             }
@@ -651,102 +480,35 @@ public class WJServiceImpl implements WJService {
     }
 
     @Override
-    public void deleteExercise(long id) throws CustomException {
-        if (exercisesRepository.existsById(id)) {
-            exercisesRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such exercise");
+    public void deleteExerciseParameter(List<Long> ids) throws CustomException {
+        for (Long id: ids) {
+            if (exercisesParametersRepository.existsById(id)) {
+                exercisesParametersRepository.deleteById(id);
+            } else {
+                throw new CustomException("No such exercise parameter");
+            }
         }
     }
 
     @Override
-    public void deleteExerciseParameter(long id) throws CustomException {
-        if (exercisesParametersRepository.existsById(id)) {
-            exercisesParametersRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such exercise parameter");
+    public void deleteUserWorkout(List<Long> ids) throws CustomException {
+        for (Long id: ids) {
+            if (userWorkoutsRepository.existsById(id)) {
+                userWorkoutsRepository.deleteById(id);
+            } else {
+                throw new CustomException("No such user workout");
+            }
         }
     }
 
     @Override
-    public void deleteExerciseType(long id) throws CustomException {
-        if (exerciseTypesRepository.existsById(id)) {
-            exerciseTypesRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such exercise type");
-        }
-    }
-
-    @Override
-    public void deleteMeasureUnit(long id) throws CustomException {
-        if (measureUnitsRepository.existsById(id)) {
-            measureUnitsRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such measure unit");
-        }
-    }
-
-    @Override
-    public void deleteParameter(long id) throws CustomException {
-        if (parametersRepository.existsById(id)) {
-            parametersRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such parameter");
-        }
-    }
-
-    @Override
-    public void deleteParameterType(long id) throws CustomException {
-        if (parameterTypesRepository.existsById(id)) {
-            parameterTypesRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such parameter type");
-        }
-    }
-
-    @Override
-    public void deleteUser(long id) throws CustomException {
-        if (usersRepository.existsById(id)) {
-            usersRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such user");
-        }
-    }
-
-    @Override
-    public void deleteUserWorkout(long id) throws CustomException {
-        if (userWorkoutsRepository.existsById(id)) {
-            userWorkoutsRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such user workout");
-        }
-    }
-
-    @Override
-    public void deleteUserWorkoutParameterValue(long id) throws CustomException {
-        if (userWorkoutParameterValuesRepository.existsById(id)) {
-            userWorkoutParameterValuesRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such user workout parameter value");
-        }
-    }
-
-    @Override
-    public void deleteWorkout(long id) throws CustomException {
-
-        if (workoutsRepository.existsById(id)) {
-            workoutsRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such workout");
-        }
-    }
-
-    @Override
-    public void deleteWorkoutExercise(long id) throws CustomException {
-        if (workoutExercisesRepository.existsById(id)) {
-            workoutExercisesRepository.deleteById(id);
-        } else {
-            throw new CustomException("No such workout exercise");
+    public void deleteWorkoutExercise(List<Long> ids) throws CustomException {
+        for (Long id: ids) {
+            if (workoutExercisesRepository.existsById(id)) {
+                workoutExercisesRepository.deleteById(id);
+            } else {
+                throw new CustomException("No such workout exercise");
+            }
         }
     }
 
@@ -776,26 +538,10 @@ public class WJServiceImpl implements WJService {
         }
 
         @Component
-        public static class StringIdToMeasureUnit implements Converter<String, MeasureUnit> {
-            @Override
-            public MeasureUnit convert(String id) {
-                return measureUnitsRepository.findById(Long.parseLong(id)).orElse(null);
-            }
-        }
-
-        @Component
         public static class StringIdToParameter implements Converter<String, Parameter> {
             @Override
             public Parameter convert(String id) {
                 return parametersRepository.findById(Long.parseLong(id)).orElse(null);
-            }
-        }
-
-        @Component
-        public static class StringIdToParameterType implements Converter<String, ParameterType> {
-            @Override
-            public ParameterType convert(String id) {
-                return parameterTypesRepository.findById(Long.parseLong(id)).orElse(null);
             }
         }
 
@@ -816,9 +562,9 @@ public class WJServiceImpl implements WJService {
         }
 
         @Component
-        public static class StringIdToUserWorkoutParameterValue implements Converter<String, UserWorkoutParameterValue> {
+        public static class StringIdToUserWorkoutParameterValue implements Converter<String, DoneExercise> {
             @Override
-            public UserWorkoutParameterValue convert(String id) {
+            public DoneExercise convert(String id) {
                 return userWorkoutParameterValuesRepository.findById(Long.parseLong(id)).orElse(null);
             }
         }
@@ -836,6 +582,22 @@ public class WJServiceImpl implements WJService {
             @Override
             public WorkoutExercise convert(String id) {
                 return workoutExercisesRepository.findById(Long.parseLong(id)).orElse(null);
+            }
+        }
+
+        @Component
+        public static class StringIdToDoneExercise implements Converter<String, DoneExercise> {
+            @Override
+            public DoneExercise convert(String id) {
+                return doneExerciseRepository.findById(Long.parseLong(id)).orElse(null);
+            }
+        }
+
+        @Component
+        public static class StringIdToParameterResult implements Converter<String, ParameterResult> {
+            @Override
+            public ParameterResult convert(String id) {
+                return parameterResultsRepository.findById(Long.parseLong(id)).orElse(null);
             }
         }
     }

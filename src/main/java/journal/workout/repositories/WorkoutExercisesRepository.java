@@ -11,4 +11,5 @@ public interface WorkoutExercisesRepository extends CrudRepository<WorkoutExerci
     List<WorkoutExercise> findAll();
 
     Optional<List<WorkoutExercise>> findAllByWorkout(Workout workout);
+    List<WorkoutExercise> getAllByWorkout(Workout workout);
 }

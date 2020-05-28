@@ -10,10 +10,10 @@ public class ParameterBody {
     private String name;
 
     @NotNull
-    private Long measureUnitId;
+    private String measure_unit;
 
     @NotNull
-    private Long parameterTypeId;
+    private Integer result_type;
 
     public String getName() {
         return name;
@@ -23,19 +23,19 @@ public class ParameterBody {
         this.name = name;
     }
 
-    public Long getMeasureUnitId() {
-        return measureUnitId;
+    public String getMeasure_unit() {
+        return measure_unit;
     }
 
-    public void setMeasureUnitId(Long measureUnitId) {
-        this.measureUnitId = measureUnitId;
+    public void setMeasure_unit(String measure_unit_id) {
+        this.measure_unit = measure_unit_id;
     }
 
-    public Long getParameterTypeId() {
-        return parameterTypeId;
+    public Integer getResult_type() {
+        return result_type;
     }
 
-    public void setParameterTypeId(Long parameterTypeId) {
-        this.parameterTypeId = parameterTypeId;
+    public void setResult_type(Integer result_type) {
+        this.result_type = result_type;
     }
 }

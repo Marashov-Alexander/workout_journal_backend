@@ -16,9 +16,6 @@ public class Exercise {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
-    private String description;
-
     @ManyToOne
     @JoinColumn(name = "type_id")
     private ExerciseType exerciseType;
@@ -37,14 +34,6 @@ public class Exercise {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public ExerciseType getExerciseType() {

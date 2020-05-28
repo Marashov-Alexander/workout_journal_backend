@@ -14,9 +14,6 @@ public class UserWorkout {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "comments")
-    private String comments;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -39,14 +36,6 @@ public class UserWorkout {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
     }
 
     public User getUser() {

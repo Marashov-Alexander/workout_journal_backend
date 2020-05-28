@@ -5,24 +5,24 @@ import javax.validation.constraints.NotNull;
 public class WorkoutExerciseBody {
 
     @NotNull
-    private Long workoutId;
+    private Long workout_id;
 
     @NotNull
-    private Long exerciseId;
+    private Long exercise_id;
 
-    public Long getWorkoutId() {
-        return workoutId;
+    public Long getWorkout_id() {
+        return workout_id;
     }
 
-    public void setWorkoutId(Long workoutId) {
-        this.workoutId = workoutId;
+    public void setWorkout_id(Long workout_id) {
+        this.workout_id = workout_id;
     }
 
-    public Long getExerciseId() {
-        return exerciseId;
+    public Long getExercise_id() {
+        return exercise_id;
     }
 
-    public void setExerciseId(Long exerciseId) {
-        this.exerciseId = exerciseId;
+    public void setExercise_id(Long exercise_id) {
+        this.exercise_id = exercise_id;
     }
 }

@@ -14,13 +14,11 @@ public class Parameter {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "measure_unit_id")
-    private MeasureUnit measureUnit;
+    @JoinColumn(name = "measure_unit")
+    private String measureUnit;
 
-    @ManyToOne
-    @JoinColumn(name = "parameter_type_id")
-    private ParameterType parameterType;
+    @JoinColumn(name = "result_type")
+    private Integer resultType;
 
     public Long getId() {
         return id;
@@ -38,19 +36,19 @@ public class Parameter {
         this.name = name;
     }
 
-    public MeasureUnit getMeasureUnit() {
+    public String getMeasureUnit() {
         return measureUnit;
     }
 
-    public void setMeasureUnit(MeasureUnit measureUnit) {
+    public void setMeasureUnit(String measureUnit) {
         this.measureUnit = measureUnit;
     }
 
-    public ParameterType getParameterType() {
-        return parameterType;
+    public Integer getResultType() {
+        return resultType;
     }
 
-    public void setParameterType(ParameterType parameterType) {
-        this.parameterType = parameterType;
+    public void setResultType(Integer resultType) {
+        this.resultType = resultType;
     }
 }

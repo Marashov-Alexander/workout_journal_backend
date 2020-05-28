@@ -11,7 +11,11 @@ public class WorkoutBody {
 
     @NotNull
     @NotEmpty
-    private String description;
+    private String planned_time;
+
+    @NotNull
+    @NotEmpty
+    private Integer weekdays_mask;
 
     public String getName() {
         return name;
@@ -21,11 +25,19 @@ public class WorkoutBody {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPlanned_time() {
+        return planned_time;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setPlanned_time(String planned_time) {
+        this.planned_time = planned_time;
+    }
+
+    public Integer getWeekdays_mask() {
+        return weekdays_mask;
+    }
+
+    public void setWeekdays_mask(Integer weekdays_mask) {
+        this.weekdays_mask = weekdays_mask;
     }
 }
