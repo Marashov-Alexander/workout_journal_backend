@@ -24,7 +24,6 @@ public class WJServiceImpl implements WJService {
     static ParametersRepository parametersRepository;
     static ParameterResultsRepository parameterResultsRepository;
     static UsersRepository usersRepository;
-    static DoneExerciseRepository userWorkoutParameterValuesRepository;
     static UserWorkoutsRepository userWorkoutsRepository;
     static WorkoutExercisesRepository workoutExercisesRepository;
     static WorkoutsRepository workoutsRepository;
@@ -36,7 +35,6 @@ public class WJServiceImpl implements WJService {
                          ParametersRepository parametersRepository,
                          ParameterResultsRepository parameterResultsRepository,
                          UsersRepository usersRepository,
-                         DoneExerciseRepository userWorkoutParameterValuesRepository,
                          UserWorkoutsRepository userWorkoutsRepository,
                          WorkoutExercisesRepository workoutExercisesRepository,
                          WorkoutsRepository workoutsRepository,
@@ -47,7 +45,6 @@ public class WJServiceImpl implements WJService {
         WJServiceImpl.parametersRepository = parametersRepository;
         WJServiceImpl.parameterResultsRepository = parameterResultsRepository;
         WJServiceImpl.usersRepository = usersRepository;
-        WJServiceImpl.userWorkoutParameterValuesRepository = userWorkoutParameterValuesRepository;
         WJServiceImpl.userWorkoutsRepository = userWorkoutsRepository;
         WJServiceImpl.workoutExercisesRepository = workoutExercisesRepository;
         WJServiceImpl.workoutsRepository = workoutsRepository;
@@ -417,7 +414,7 @@ public class WJServiceImpl implements WJService {
         if (doneExerciseBody.getDate() != null) {
             doneExercise.setDate(doneExerciseBody.getDate());
         }
-        userWorkoutParameterValuesRepository.save(doneExercise);
+        doneExerciseRepository.save(doneExercise);
     }
 
     @Override
@@ -542,14 +539,6 @@ public class WJServiceImpl implements WJService {
             @Override
             public UserWorkout convert(String id) {
                 return userWorkoutsRepository.findById(Long.parseLong(id)).orElse(null);
-            }
-        }
-
-        @Component
-        public static class StringIdToUserWorkoutParameterValue implements Converter<String, DoneExercise> {
-            @Override
-            public DoneExercise convert(String id) {
-                return userWorkoutParameterValuesRepository.findById(Long.parseLong(id)).orElse(null);
             }
         }
 

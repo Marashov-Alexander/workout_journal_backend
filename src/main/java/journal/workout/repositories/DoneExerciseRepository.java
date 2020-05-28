@@ -11,6 +11,5 @@ import java.util.Optional;
 
 public interface DoneExerciseRepository extends CrudRepository<DoneExercise, Long> {
     List<DoneExercise> findAll();
-
     List<DoneExercise> findAllByUser(User user);
 }
