@@ -391,14 +391,7 @@ public class WJServiceImpl implements WJService {
     }
 
     private void copyAndSave(UserWorkout userWorkout, UserWorkoutBody userWorkoutBody) throws CustomException {
-
-        if (userWorkoutBody.getUser_id() != null) {
-            Optional<User> optionalUser = usersRepository.findById(userWorkoutBody.getUser_id());
-            if (optionalUser.isEmpty()) {
-                throw new CustomException("No such user");
-            }
-            userWorkout.setUser(optionalUser.get());
-        }
+        userWorkout.setUser(getUser());
 
         if (userWorkoutBody.getWorkout_id() != null) {
             Optional<Workout> optionalWorkout = workoutsRepository.findById(userWorkoutBody.getWorkout_id());
@@ -411,13 +404,7 @@ public class WJServiceImpl implements WJService {
     }
 
     private void copyAndSave(DoneExercise doneExercise, DoneExerciseBody doneExerciseBody) throws CustomException {
-        if (doneExerciseBody.getUser_id() != null) {
-            Optional<User> optionalParameter = usersRepository.findById(doneExerciseBody.getUser_id());
-            if (optionalParameter.isEmpty()) {
-                throw new CustomException("No such user");
-            }
-            doneExercise.setUser(optionalParameter.get());
-        }
+        doneExercise.setUser(getUser());
 
         if (doneExerciseBody.getExercise_id() != null) {
             Optional<Exercise> optional = exercisesRepository.findById(doneExerciseBody.getExercise_id());

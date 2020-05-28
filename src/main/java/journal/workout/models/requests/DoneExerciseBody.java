@@ -12,10 +12,6 @@ public class DoneExerciseBody {
 
     @NotNull
     @NotEmpty
-    private Long user_id;
-
-    @NotNull
-    @NotEmpty
     private Date date;
 
     public Long getExercise_id() {
@@ -24,14 +20,6 @@ public class DoneExerciseBody {
 
     public void setExercise_id(Long exercise_id) {
         this.exercise_id = exercise_id;
-    }
-
-    public Long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
     }
 
     public Date getDate() {
