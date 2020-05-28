@@ -72,12 +72,12 @@ public class AppController {
         return new ResponseEntity<>(wjService.readUserWorkouts(), HttpStatus.OK);
     }
 
-    @GetMapping("/parameter-results/create")
+    @PostMapping("/parameter-results/create")
     public ResponseEntity<Object> createParameterResults(@Valid @RequestBody List<ParameterResultBody> bodies) {
         return new ResponseEntity<>(wjService.createParameterResult(bodies), HttpStatus.CREATED);
     }
 
-    @GetMapping("/done-exercises/create")
+    @PostMapping("/done-exercises/create")
     public ResponseEntity<Object> createDoneExercises(@Valid @RequestBody List<DoneExerciseBody> bodies) {
         try {
             return new ResponseEntity<>(wjService.createDoneExercise(bodies), HttpStatus.CREATED);
